@@ -1,4 +1,4 @@
-##### Linux
+#### Linux
 
 **aur** notify if Arch updates are available
 
@@ -6,7 +6,7 @@
 
 **battery** notify if battery is low
 
-##### macOS
+#### macOS
 
 **solidbg** set wallpaper to solid colors using system colors
 
