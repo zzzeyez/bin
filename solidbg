@@ -19,4 +19,4 @@ case "$1" in
 
 esac
 
-wallpaper /tmp/solidbg.png
+wallpaper $image
