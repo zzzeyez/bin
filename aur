@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+while :; do 
+	n=$(checkupdates | wc -l)
+	if [ "$n" != "0" ]; then
+	    notify-send "$n updates available"
+	fi
+	sleep 30m
+done
