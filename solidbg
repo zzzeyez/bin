@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+# Author: Daniel Neemann
 
 . "$HOME/.cache/wal/colors.sh"
 
 image="/tmp/solidbg.png"
-image2="/tmp/black.png"
+image2="/tmp/solidbg2.png"
 
 case "$1" in
 
@@ -17,9 +18,12 @@ case "$1" in
 	"7") convert -size 5x5 xc:$color7 $image ;;
 	"8") convert -size 5x5 xc:$color8 $image ;;
 	"15") convert -size 5x5 xc:$color15 $image ;;
+	"black") convert -size 5x5 xc:#000000 $image ;;
 
 esac
 
-convert -size 5x5 xc:#000000 $image2 &&
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/black.png"' &&
+# Set image as black first, because osascript does not allow
+# you to set as the same image twice in a row
+convert -size 5x5 xc:$color0 $image2 &&
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg2.png"' &&
 osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg.png"'
