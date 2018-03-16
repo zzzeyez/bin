@@ -3,6 +3,7 @@
 . "$HOME/.cache/wal/colors.sh"
 
 image="/tmp/solidbg.png"
+image2="/tmp/black.png"
 
 case "$1" in
 
@@ -19,4 +20,6 @@ case "$1" in
 
 esac
 
+convert -size 5x5 xc:#000000 $image2 &&
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/black.png"' &&
 osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg.png"'
