@@ -19,4 +19,4 @@ case "$1" in
 
 esac
 
-wallpaper $image
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg.png"'
