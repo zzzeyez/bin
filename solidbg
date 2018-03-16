@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+. "$HOME/.cache/wal/colors.sh"
+
+case "$1" in
+
+	"0") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color0" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"1") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color1" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"2") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color2" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"3") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color3" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"4") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color4" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"5") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color5" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"6") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color6" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"7") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color7" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"8") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color8" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+	"15") convert ~/Pictures/Wallpapers/Vivid/solid.jpg -fill "$color15" -colorize 100 ~/Pictures/Wallpapers/Vivid/solid.jpg ;;
+
+esac
+
+wallpaper ~/Pictures/Wallpapers/Vivid/solid.jpg
