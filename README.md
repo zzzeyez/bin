@@ -10,4 +10,6 @@
 
 **solidbg** set wallpaper to solid colors using system colors
 
+**wallpaper** set wallpaper for current workspace
+
 **wal-set** expand 'Wal' colors to 'Pecan' and 'Pollen'
