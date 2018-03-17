@@ -18,6 +18,7 @@ case "$1" in
 	"7") convert -size 5x5 xc:$color7 $image ;;
 	"8") convert -size 5x5 xc:$color8 $image ;;
 	"15") convert -size 5x5 xc:$color15 $image ;;
+	"color") convert -size 5x5 xc:$2 $image ;;
 	*.*) cp $1 $image ;;
 
 esac
