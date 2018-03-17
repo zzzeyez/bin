@@ -1,8 +1,29 @@
 #!/usr/bin/env bash
-# Changes macOS wallpaper for current workspace
-# Daniel Neemann
+# Author: Daniel Neemann
 
-image="/tmp/wallpaper.png"
+. "$HOME/.cache/wal/colors.sh"
 
-cp $1 /tmp/wallpaper.png &&
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/wallpaper.png"'
+image="/tmp/solidbg.png"
+image2="/tmp/solidbg2.png"
+
+case "$1" in
+
+	"0") convert -size 5x5 xc:$color0 $image ;;
+	"1") convert -size 5x5 xc:$color1 $image ;;
+	"2") convert -size 5x5 xc:$color2 $image ;;
+	"3") convert -size 5x5 xc:$color3 $image ;;
+	"4") convert -size 5x5 xc:$color4 $image ;;
+	"5") convert -size 5x5 xc:$color5 $image ;;
+	"6") convert -size 5x5 xc:$color6 $image ;;
+	"7") convert -size 5x5 xc:$color7 $image ;;
+	"8") convert -size 5x5 xc:$color8 $image ;;
+	"15") convert -size 5x5 xc:$color15 $image ;;
+	*.*) cp $1 $image ;;
+
+esac
+
+# Set image as black first, because osascript does not allow
+# you to set as the same image twice in a row
+convert -size 5x5 xc:$color0 $image2 &&
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg2.png"' &&
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg.png"'

@@ -8,8 +8,6 @@
 
 #### macOS
 
-**solidbg** set wallpaper to solid colors using system colors
-
-**wallpaper** set wallpaper for current workspace
+**wallpaper** set wallpaper for current workspace as image or 'wal' color
 
 **wal-set** expand 'Wal' colors to 'Pecan' and 'Pollen'
