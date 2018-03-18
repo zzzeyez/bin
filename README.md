@@ -10,4 +10,12 @@
 
 **wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
 
-**wal-set** expand `Wal` colors to `Pecan` and `Pollen`
+**wal-set** expand `Wal` colors to `Pecan` and `Pollen` (requires `Sassc`)
+
+**battery** echo current battery percentage
+
+**network** echo current wi-fi network
+
+**down** echo current download speed (requires `Ifstat`)
+
+**up** echo current upload speed (requires `Ifstat`)
