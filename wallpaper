@@ -32,5 +32,5 @@ esac
 # osascript does not allow you to repeatedly set as same image
 # so we generate an additional image
 convert -size 5x5 xc:"$color0" "$image2" &&
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg2.png"' &&
-osascript -e 'tell application "Finder" to set desktop picture to POSIX file "/tmp/solidbg.png"'
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'$image2'"' &&
+osascript -e 'tell application "Finder" to set desktop picture to POSIX file "'$image'"'
