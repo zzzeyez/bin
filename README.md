@@ -8,6 +8,6 @@
 
 #### macOS
 
-**wallpaper** set wallpaper for current workspace as image or `Wal` color
+**wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
 
 **wal-set** expand `Wal` colors to `Pecan` and `Pollen`

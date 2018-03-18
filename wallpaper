@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 # Author: Daniel Neemann
-# wallpaper accepts the following inputs: Wal color number, image address, hex value
-# so for example:
-# wallpaper 5
-# wallpaper ./smiledog.jpg
-# wallpaper dddddd
 
 . "$HOME/.cache/wal/colors.sh"
 
 image="/tmp/solidbg.png"
 image2="/tmp/solidbg2.png"
+help="wallpaper accepts the following inputs: Wal color number, image address, hex value
+so for example:
+wallpaper 5
+wallpaper ./smiledog.jpg
+wallpaper dddddd"
 
 case "$1" in
 
+	-h|-H|--help) echo "$help" && exit ;;
 	0) convert -size 5x5 xc:"$color0" "$image" ;;
 	1) convert -size 5x5 xc:"$color1" "$image" ;;
 	2) convert -size 5x5 xc:"$color2" "$image" ;;
