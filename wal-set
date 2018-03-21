@@ -2,4 +2,5 @@
 
 sassc --style expanded "${HOME}/scripts/pollen/scss/style.scss" > "${HOME}/scripts/pollen/style.css" &&
 bash "${HOME}/scripts/uber/Pecan/wal-set" &&
-bash "${HOME}/scripts/uber/Xanthia/wal-set"
+bash "${HOME}/scripts/uber/Xanthia/wal-set" &&
+notify-send "New colors!"

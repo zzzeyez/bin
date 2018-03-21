@@ -10,7 +10,7 @@
 
 **wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
 
-**wal-set** expand `Wal` colors to `Pecan` and `Pollen` (requires `Sassc`)
+**wal-set** expand `Wal` colors to `Pecan`, `Xanthia` and `Pollen` (requires `Sassc`)
 
 **battery** echo current battery percentage
 
@@ -19,3 +19,5 @@
 **down** echo current download speed (requires `Ifstat`)
 
 **up** echo current upload speed (requires `Ifstat`)
+
+**scr** screenshot and notify (requires `Xanthia`)

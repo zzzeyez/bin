@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+dir=$(date +"%y-%m-%d")
+file=$(date +"%H-%M-%S")
+
+mkdir -p $HOME/Pictures/Screenshots/$dir &&
+screencapture -i $HOME/Pictures/Screenshots/$dir/$file.png &&
+notify-send "Screenshot $dir/$file.png saved"
