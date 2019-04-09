@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Import the colors
+. "${HOME}/.cache/wal/colors.sh"
+
+# Set the border colors.
+chunkc border::color ff"${color1//#}"
+

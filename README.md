@@ -21,3 +21,5 @@
 **up** echo current upload speed (requires `Ifstat`)
 
 **scr** screenshot and notify (requires `Xanthia`)
+
+**togglebar** toggle `ubersicht` and `lastfm`

@@ -1,8 +1,30 @@
 #!/usr/bin/env bash
+# screenshot script
+# Author: Daniel Neemann
 
-dir=$(date +"%y-%m-%d")
-file=$(date +"%H-%M-%S")
+dir="$HOME/Pictures/Screenshots/$(date +'%y-%m-%d')"
+file="$(date +'%H-%M-%S')"
+image="$dir/$file.png"
 
-mkdir -p $HOME/Pictures/Screenshots/$dir &&
-screencapture -i $HOME/Pictures/Screenshots/$dir/$file.png &&
-notify-send "Screenshot $dir/$file.png saved"
+mkdir -p "$dir" &&
+screencapture -i "$image" &&
+
+notify(){
+	notify-send "✔ Screenshot $file.png saved"
+}
+
+up(){
+	upload "$image"
+}
+
+case "$1" in
+    -n)
+		notify
+	;;
+    -u)
+		up
+	;;
+	-nu|-un)
+		notify && up
+	;;
+esac

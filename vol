@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Change volume and display notification
+# Created by Daniel Neemann
+# Depends on: notify-send
+
+
+notify(){
+	n=$(osascript -e 'output muted of (get volume settings)')
+	if [ "$n" = "true" ]; then
+	    notify-send "◂Volume muted"
+	else
+		notify-send "◂Volume $(osascript -e "output volume of (get volume settings)")"
+	fi
+}
+
+mute(){
+    osascript -e "set volume output muted true"
+	notify
+}
+
+unmute(){
+    osascript -e "set volume output muted false"
+    notify
+
+}
+
+adjust(){
+    osascript -e "set volume output volume (get output volume of (get volume settings) $1)"
+    notify
+}
+
+help(){
+	echo "options: +/- amount, mute, unmute.  running without options provokes notification."
+
+case $1 in
+    +[0-9]*|-[0-9]*)
+        adjust $1
+        ;;
+    mute)
+        mute
+        ;;
+    unmute)
+        unmute
+        ;;
+    help)
+        help
+        ;;
+    *)
+        notify
+        ;;
+esac
