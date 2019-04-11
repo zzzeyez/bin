@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
-# screenshot script
-# Author: Daniel Neemann
+#
+# author: daniel neemann (@zzzeyez)
+# macos screenshot script
+#
+# optional dependencies: `notify-send`, `upload`
 
 dir="$HOME/Pictures/Screenshots/$(date +'%y-%m-%d')"
 file="$(date +'%H-%M-%S')"
 image="$dir/$file.png"
 
-mkdir -p "$dir" &&
-screencapture -i "$image" &&
+screenshot() {
+	mkdir -p "$dir"
+	screencapture -i "$image"
+}
 
 notify(){
 	notify-send -m "✔ Screenshot $file.png saved" -i "$image"
@@ -18,13 +23,33 @@ up(){
 }
 
 case "$1" in
-    -n)
-		notify
+	-n)
+	notify
 	;;
-    -u)
-		up
+	-u)
+	up
 	;;
 	-nu|-un)
-		notify && up
+	notify && up
 	;;
 esac
+
+multiple() {
+	while getopts nuh opt; do
+		case $opt in
+			n) notify
+			;;
+			u) up
+			;;
+			h) echo "-n to notify when finished, -u to upload"
+			;;
+		esac
+	done
+}
+
+if [ "$#" -gt 0 ]; then
+	screenshot &&
+	multiple
+else
+	screenshot
+fi
