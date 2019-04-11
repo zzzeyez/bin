@@ -10,7 +10,7 @@ mkdir -p "$dir" &&
 screencapture -i "$image" &&
 
 notify(){
-	notify-send "✔ Screenshot $file.png saved"
+	notify-send -m "✔ Screenshot $file.png saved" -i "$image"
 }
 
 up(){
