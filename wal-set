@@ -5,4 +5,3 @@ bash "${HOME}/scripts/Pecan/wal-set" &
 bash "${HOME}/scripts/Xanthia/wal-set" &
 sleep 0.5s
 chunkborder &
-notify-send "✔ Color palettes updated"

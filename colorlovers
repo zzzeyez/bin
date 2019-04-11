@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+
+entry="$((RANDOM%50))"
+colorlovers=`curl -s "http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"`
+image=`echo "$colorlovers" | jq ".[$entry] | .badgeUrl" | tr -d '"'`
+badge=`echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"'`
+title=`echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"'`
+
+dark() {
+rm ${HOME}/.cache/wal/schemes/_tmp* &
+keyword="$@" &&
+convert "$image" /tmp/wal.png &&
+wal -i /tmp/wal.png -o wal-set -n -b 444444
+}
+
+light() {
+rm ${HOME}/.cache/wal/schemes/_tmp* &
+keyword="$@" &&
+convert "$image" /tmp/wal.png &&
+wal -i /tmp/wal.png -o wal-set -n -l
+}
+
+multiple() {
+  while getopts l:d: opt; do
+      case $opt in
+		  d) dark "$OPTARG"
+          ;;
+          l) light "$OPTARG"
+          ;;
+    esac
+  done
+}
+
+if [ "$#" -gt 1 ]; then
+  multiple "$@" &
+  echo "$image" &
+  sleep 0.5s &
+  notify-send -i "$badge" -m "$title"
+else
+  light "$@" &
+  echo "$image" &
+  sleep 0.5s &
+  notify-send -i "$badge" -m "$title"
+fi
