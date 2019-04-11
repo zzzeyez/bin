@@ -24,4 +24,6 @@
 
 **togglebar** toggle `ubersicht` and `lastfm`
 
-**lastfm** notifies and displays artwork for current track.  requires `xanthia`
+**lastfm** notifies and displays artwork for current track (requires `Xanthia` and `jq`)
+
+**colorlovers** colorlovers.com palettes for system colors (requires `wal` and `jq`)
