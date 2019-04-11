@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-
+#
 # author daniel neemann 
 # toggles bar and lastfm notifications
+#
+# requires `ubersicht`, `lastfm` and chunkwm
 
 ubersicht_pid=$(ps cax | grep bersicht | awk '{print $1}')
 lastfm_pid=$(ps -ae | grep lastfm | awk '{print $1}')
@@ -10,13 +12,13 @@ ps cax | grep bersicht > /dev/null
 if [ $? -eq 0 ]; then
 	kill $ubersicht_pid &
   	kill $lastfm_pid &
-	chunkc set custom_bar_enabled 0 &
-	chunkc core::unload tiling.so &
+	chunkc set custom_bar_enabled 0
+	chunkc core::unload tiling.so
 	chunkc core::load tiling.so
 else
 	open /Applications/Übersicht.app &
 	lastfm &
-	chunkc set custom_bar_enabled 1 &
-	chunkc core::unload tiling.so &
+	chunkc set custom_bar_enabled 1
+	chunkc core::unload tiling.so
 	chunkc core::load tiling.so
 fi &
