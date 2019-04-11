@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+#
+# author: daniel neeman (@zzzeyez)
+#
+# grabs palettes from colorlovers.com
+# and uses `wal` to apply them to system
+#
+# requires `wal` and `jq`
 
 
 entry="$((RANDOM%50))"
@@ -8,38 +15,43 @@ badge=`echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"'`
 title=`echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"'`
 
 dark() {
-rm ${HOME}/.cache/wal/schemes/_tmp* &
-keyword="$@" &&
-convert "$image" /tmp/wal.png &&
-wal -i /tmp/wal.png -o wal-set -n -b 444444
+	rm ${HOME}/.cache/wal/schemes/_tmp*
+	keyword="$@"
+	convert "$image" /tmp/wal.png &&
+	wal -i /tmp/wal.png -o wal-set -n -b 444444
 }
 
 light() {
-rm ${HOME}/.cache/wal/schemes/_tmp* &
-keyword="$@" &&
-convert "$image" /tmp/wal.png &&
-wal -i /tmp/wal.png -o wal-set -n -l
+	rm ${HOME}/.cache/wal/schemes/_tmp*
+	keyword="$@"
+	convert "$image" /tmp/wal.png &&
+	wal -i /tmp/wal.png -o wal-set -n -l
+}
+
+help() {
+	echo "available flags: -l for light mode, -d for dark mode"
+	echo "search terms are optional and don't need flags"
 }
 
 multiple() {
-  while getopts l:d: opt; do
-      case $opt in
-		  d) dark "$OPTARG"
-          ;;
-          l) light "$OPTARG"
-          ;;
-    esac
-  done
+	while getopts l:d: opt; do
+		case $opt in
+			d) dark "$OPTARG"
+			;;
+			l) light "$OPTARG"
+			;;
+			h) help
+			;;
+		esac
+	done
 }
 
 if [ "$#" -gt 1 ]; then
-  multiple "$@" &
-  echo "$image" &
-  sleep 0.5s &
-  notify-send -i "$badge" -m "$title"
+	multiple "$@"
+	echo "$image"
+	notify-send -i "$badge" -m "$title"
 else
-  light "$@" &
-  echo "$image" &
-  sleep 0.5s &
-  notify-send -i "$badge" -m "$title"
+	light "$@"
+	echo "$image"
+	notify-send -i "$badge" -m "$title"
 fi
