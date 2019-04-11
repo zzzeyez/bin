@@ -9,11 +9,11 @@
 
 last=""
 
- while true; do
+while true; do
 	lastfm=`curl -s "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=em3i3mei&api_key=e27e6814188f7fc3da7fe91703faf865&format=json"`
-    artist=`echo "$lastfm" | jq ".[] | .track | .[0] | .artist " | tr -d "\#" | jq ".text" | tr -d '"'`
-    track=`echo "$lastfm" | jq ".[] | .track | .[0] | .name" | tr -d '"'`
-    album=`echo "$lastfm" | jq ".[] | .track | .[0] | .album " | tr -d "\#" | jq ".text" | tr -d '"'`
+	artist=`echo "$lastfm" | jq ".[] | .track | .[0] | .artist " | tr -d "\#" | jq ".text" | tr -d '"'`
+	track=`echo "$lastfm" | jq ".[] | .track | .[0] | .name" | tr -d '"'`
+	album=`echo "$lastfm" | jq ".[] | .track | .[0] | .album " | tr -d "\#" | jq ".text" | tr -d '"'`
 	art=`echo "$lastfm" | jq '.[] | .track | .[0] | .image[3] | .["#text"]' | tr -d '"'`
 	image=`echo ${art:-/Users/zzzeyez/scripts/albumart/none.jpg}`
 	current="$artist - $track"
