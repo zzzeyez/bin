@@ -34,7 +34,7 @@ help() {
 }
 
 multiple() {
-	while getopts l:d: opt; do
+	while getopts l:d:h opt; do
 		case $opt in
 			d) dark "$OPTARG"
 			;;
