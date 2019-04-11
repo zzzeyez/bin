@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
- 
+#
 # author daniel neemann
 # creates notifications for currently playing last.fm track
 # requires jq
@@ -20,7 +20,7 @@ while true; do
 	if [ "$last" != "$current" ]
 		then
 			notify-send -m "♫ $current" -i "$image"
-        	last="$current"
+        		last="$current"
 		fi
 	sleep 5s;
  done
