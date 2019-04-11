@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-sassc --style expanded "${HOME}/scripts/pollen/scss/style.scss" > "${HOME}/scripts/pollen/style.css" &
+sassc --style expanded "${HOME}/scripts/pollen/scss/style.scss" > "${HOME}/scripts/pollen/style.css"
 bash "${HOME}/scripts/Pecan/wal-set" &
 bash "${HOME}/scripts/Xanthia/wal-set" &
-sleep 0.5s
-chunkborder &
+chunkborder
