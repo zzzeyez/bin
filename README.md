@@ -23,3 +23,5 @@
 **scr** screenshot and notify (requires `Xanthia`)
 
 **togglebar** toggle `ubersicht` and `lastfm`
+
+**lastfm** notifies and displays artwork for current track.  requires `xanthia`
