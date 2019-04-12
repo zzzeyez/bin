@@ -42,14 +42,30 @@ search() {
 	entry="$((RANDOM%20))"
 	unsplashurl="https://api.unsplash.com/search/photos?client_id=$unsplashapi&query=$keyword&per_page=20"
 	searchjson=$(curl -s "$unsplashurl")
-	image="$(echo "$searchjson" | jq "{results} | .[] | .[$entry] | {urls} | .[] | {full} | .[]" | tr -d '"')"
+	image="$(echo "$searchjson" | jq "{results} | .[] | .[$entry] | {urls} | .[] | {raw} | .[]" | tr -d '"')&w=1400&dpi=2"
+	# new image="$(echo "$featuredjson" | jq ".results | .[0] .urls .raw" | tr -d '"')&w=1400&dpi=2"
+	username="$(echo "$featuredjson" | jq ".results | .[0] .user .name" | tr -d '"')"
+	userurl="$(echo "$featuredjson" | jq ".results | .[0] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+	photourl="$(echo "$featuredjson" | jq ".results | .[0] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
 }
 
 featured() {
 	entry="$((RANDOM%50))"
 	unsplashurl="https://api.unsplash.com/photos?client_id=$unsplashapi&per_page=50"
 	featuredjson=$(curl -s "$unsplashurl")
-	image="$(echo "$featuredjson" | jq ".[$entry] | {urls} | .[] | {full} | .[]" | tr -d '"')"
+	#old image="$(echo "$featuredjson" | jq ".[$entry] | .urls | .full" | tr -d '"')"
+	image="$(echo "$featuredjson" | jq ".[$entry] .urls .raw" | tr -d '"')&w=1400&dpi=2"
+	username="$(echo "$featuredjson" | jq ".[$entry] .user .name" | tr -d '"')"
+	userurl="$(echo "$featuredjson" | jq ".[$entry] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+	photourl="$(echo "$featuredjson" | jq ".[$entry] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+	# jsonselector.com says it's like this[1]['links']['html']
+}
+
+credits() {
+	echo "wallpaper set as $photourl"
+	echo "view more photos by $username"
+	echo "at $userurl"
+	echo "photo supplied by https://unsplash.com/"
 }
 
 bgcolor() {
@@ -69,7 +85,7 @@ setwal() {
 	then
 		rm "${HOME}"/.cache/wal/schemes/_tmp*
 		convert "$image" /tmp/wallpaper.jpg &&
-		wal -i /tmp/wallpaper.jpg -o wal-set $background $lightordark
+		wal -i /tmp/wallpaper.jpg -o wal-set -q $background $lightordark
 	else
 		convert "$image" /tmp/wallpaper.jpg &&
 		wallpaper /tmp/wallpaper.jpg	
@@ -86,6 +102,10 @@ variables() {
 	echo "unsplash api url: $unsplashurl"
 	echo "search keyword: $keyword"
 	echo "entry number: $entry"
+	echo "photo page: $photourl"
+	echo "author: $username"
+	echo "author's profile: $userurl"
+	echo "photo supplied by https://unsplash.com/"
 	exit
 }
 
@@ -142,9 +162,9 @@ flags() {
 if [ "$#" -ne 0 ]; then
 	flags "$@"
 	setwal
-	echo "$image"
+	credits
 else
 	featured
 	setwal
-	echo "$image"
+	credits
 fi
