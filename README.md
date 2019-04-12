@@ -1,12 +1,4 @@
-#### Linux
-
-**aur** notify if Arch updates are available
-
-**solidbg** set wallpaper to solid colors and gradients using `Wal` colors
-
-**battery** notify if battery is low
-
-#### macOS
+### macOS
 
 **wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
 
@@ -29,3 +21,11 @@
 **colorlovers** colorlovers.com palettes for system colors (requires `wal` and `jq`)
 
 **newroses** unsplash.com images as wallpapers or `wal` schemes (requires `wallpaper`)
+
+### Linux
+
+**aur** notify if Arch updates are available
+
+**solidbg** set wallpaper to solid colors and gradients using `Wal` colors
+
+**battery** notify if battery is low
