@@ -27,3 +27,5 @@
 **lastfm** notifies and displays artwork for current track (requires `Xanthia` and `jq`)
 
 **colorlovers** colorlovers.com palettes for system colors (requires `wal` and `jq`)
+
+**newroses** unsplash.com images as wallpapers or `wal` schemes (requires `wallpaper`)
