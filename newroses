@@ -5,10 +5,45 @@
 # grabs image from Unsplash and sets as wallpaper
 #
 # requires `wal`, `imagemagick` and `jq`
+#
+# requires API key from https://unsplash.com/developers
+# add the API key to the end of line 17,
+# uncomment line 17 and then comment line 13
 
 source ${HOME}/.config/api_keys
-entry="$((RANDOM%50))"
-lightordark="-l"
+lightordark=""
+
+getapi() {
+#	unsplashapi=
+	if [[ -z $unsplashapi ]]
+	then
+		printf \
+		"\nREQUIREMENT: GET YOUR OWN API KEY AT: \n \n"
+		printf "https://unsplash.com/developers \n \n"
+		printf "and then use it like so: \n \n"
+		printf \
+		"touch \"\${HOME}/.config/api_keys\" && "
+		printf \
+		"echo \"unsplashapi=YOUR_API_KEY > \${HOME}/.config/api_keys\" \n \n"
+		printf \
+		"replace \"YOUR_API_KEY\" with your api key \n \n"
+		printf \
+		"(or you can manually add it to line 16 of this script) \n"
+		exit
+	else
+		
+}
+
+help() {
+	printf "\navailable flags: \n"
+	printf "search: -s (keyword) \n"
+	printf "featured: -f \n" 
+	printf "light mode: -l \n"
+	printf \
+	"only set wallpaper (no system palette): -w \n" 
+	printf "notify when done: -n \n"
+	exit
+}
 
 searchterm() {
 	keyword="$1"
@@ -26,8 +61,8 @@ featured() {
 	image=$(echo "$featuredjson" | jq ".[$entry] | {urls} | .[] | {full} | .[]" | tr -d '"')
 }
 
-darkmode() {
-	lightordark=""
+lightmode() {
+	lightordark="-l"
 }
 
 setwallpaper() {
@@ -50,35 +85,25 @@ notify() {
 	notify-send -i /tmp/wallpaper.jpg
 }
 
-help() {
-	printf "REQUIREMENT: GET YOUR API AT https://unsplash.com/developers
-add your api to the top of this file in the api() section
-
-available flags: 
-search: -s (keyword) 
-featured: -f 
-darkmode: -d 
-only set wallpaper (no system palette): -w 
-notify when done: -n"
-	exit
-}
-
 flags() {
-		while getopts fdws:nh opt; do
+	while getopts hflws:n opt; do
 		case $opt in
-			f) featured
+			h) help
 			;;
-			d) darkmode
+			f)
+			getapi
+			featured
+			;;
+			l) lightmode
 			;;
 			w) setwallpaper
 			;;
 			s)
-				searchterm "$OPTARG"
-				search
+			getapi
+			searchterm "$OPTARG"
+			search
 			;;
 			n) notify
-			;;
-			h) help
 			;;
 			*) help
 			;;
