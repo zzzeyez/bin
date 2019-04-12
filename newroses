@@ -10,7 +10,7 @@
 # add the API key to the end of line 17,
 # uncomment line 17 and then comment line 13
 
-source ${HOME}/.config/api_keys
+source "${HOME}/.config/api_keys"
 lightordark=""
 
 getapi() {
@@ -30,8 +30,7 @@ getapi() {
 		printf \
 		"(or you can manually add it to line 16 of this script) \n"
 		exit
-	else
-		
+	fi	
 }
 
 help() {
