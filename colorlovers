@@ -7,51 +7,84 @@
 #
 # requires `wal` and `jq`
 
+lightordark="-l"
+background=""
 
-entry="$((RANDOM%50))"
-colorlovers=`curl -s "http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"`
-image=`echo "$colorlovers" | jq ".[$entry] | .badgeUrl" | tr -d '"'`
-badge=`echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"'`
-title=`echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"'`
-
-dark() {
-	rm ${HOME}/.cache/wal/schemes/_tmp*
-	keyword="$@"
-	convert "$image" /tmp/wal.png &&
-	wal -i /tmp/wal.png -o wal-set -n -b 444444
+removeold() {
+	rm "${HOME}"/.cache/wal/schemes/_tmp*
 }
 
-light() {
-	rm ${HOME}/.cache/wal/schemes/_tmp*
-	keyword="$@"
-	convert "$image" /tmp/wal.png &&
-	wal -i /tmp/wal.png -o wal-set -n -l
+search() {
+	keyword="$1"
+}
+
+seturl() {
+	entry="$((RANDOM%50))"
+	colorloversurl="http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"
+	colorlovers=$(curl -s "$colorloversurl")
+	image=$(echo "$colorlovers" | jq ".[$entry] | .badgeUrl" | tr -d '"')
+	badge=$(echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"')
+	title=$(echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"')
+}
+
+bgcolor() {
+	background="-b $1"
+}
+
+dark() {
+	lightordark=""
+}
+
+convertwal() {
+	convert "$image" /tmp/wal.png
+}
+
+setwal() {
+	wal -i /tmp/wal.png -o wal-set -n $background $lightordark
 }
 
 help() {
-	echo "available flags: -l for light mode, -d for dark mode"
-	echo "search terms are optional and don't need flags"
+	echo "search: -s (keyword)"
+	echo "background color: -b (hex value)"
+	echo "darkmode: -d"
+	echo "help: -h"
+	exit
 }
 
 multiple() {
-	while getopts l:d:h opt; do
+	while getopts s:b:dh opt; do
 		case $opt in
-			d) dark "$OPTARG"
+			s)  
+				search "$OPTARG"
 			;;
-			l) light "$OPTARG"
+			b)
+				bgcolor "$OPTARG"
 			;;
-			h) help
+			d)
+				dark
+			;;
+			h)
+				help
+			;;
+			*)
+				help
 			;;
 		esac
 	done
 }
 
-if [ "$#" -gt 1 ]; then
+if [ "$#" -ne 0 ]; then
 	multiple "$@"
-	echo "$image"
+	removeold
+	seturl
+	convertwal &&
+	setwal &&
+	echo "$colorloversurl"
 	notify-send -i "$badge" -m "$title"
 else
-	light "$@"
-	echo "$image"
+	removeold
+	seturl
+	convertwal &&
+	setwal &&
 	notify-send -i "$badge" -m "$title"
 fi
