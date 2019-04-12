@@ -9,6 +9,7 @@
 
 lightordark="-l"
 background=""
+badge="/tmp/colorlovers.png"
 
 removeold() {
 	rm "${HOME}"/.cache/wal/schemes/_tmp*
@@ -22,8 +23,7 @@ seturl() {
 	entry="$((RANDOM%50))"
 	colorloversurl="http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"
 	colorlovers=$(curl -s "$colorloversurl")
-	image=$(echo "$colorlovers" | jq ".[$entry] | .badgeUrl" | tr -d '"')
-	badge=$(echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"')
+	image=$(echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"')
 	title=$(echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"')
 }
 
@@ -36,11 +36,14 @@ dark() {
 }
 
 convertwal() {
-	convert "$image" /tmp/wal.png
+	convert "$image" "$badge"
+	convert -size 228x161 gradient: /tmp/gradient.png
+	composite /tmp/gradient.png -compose Hard_light /tmp/colorlovers.png \
+		/tmp/wal.png
 }
 
 setwal() {
-	wal -i /tmp/wal.png -o wal-set -n $background $lightordark
+	wal -i /tmp/wal.png -o wal-set --saturate 0.3 -n $background $lightordark
 }
 
 help() {
