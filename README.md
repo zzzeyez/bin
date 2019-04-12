@@ -1,4 +1,4 @@
-### macOS
+## macOS
 
 **wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
 
@@ -22,7 +22,7 @@
 
 **newroses** unsplash.com images as wallpapers or `wal` schemes (requires `wallpaper`)
 
-### Linux
+## Linux
 
 **aur** notify if Arch updates are available
 
