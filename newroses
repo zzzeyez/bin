@@ -7,11 +7,12 @@
 # requires `wal`, `imagemagick` and `jq`
 #
 # requires API key from https://unsplash.com/developers
-# add the API key to the end of line 17,
-# uncomment line 17 and then comment line 13
+# add the API key to the end of line 18,
+# uncomment line 18 and then comment line 14
 
 source "${HOME}/.config/api_keys"
 lightordark=""
+background=""
 
 getapi() {
 #	unsplashapi=
@@ -28,20 +29,9 @@ getapi() {
 		printf \
 		"replace \"YOUR_API_KEY\" with your api key \n \n"
 		printf \
-		"(or you can manually add it to line 16 of this script) \n"
+		"(or you can manually add it to line 18 of this script) \n"
 		exit
 	fi	
-}
-
-help() {
-	printf "\navailable flags: \n"
-	printf "search: -s (keyword) \n"
-	printf "featured: -f \n" 
-	printf "light mode: -l \n"
-	printf \
-	"only set wallpaper (no system palette): -w \n" 
-	printf "notify when done: -n \n"
-	exit
 }
 
 searchterm() {
@@ -60,6 +50,10 @@ featured() {
 	image=$(echo "$featuredjson" | jq ".[$entry] | {urls} | .[] | {full} | .[]" | tr -d '"')
 }
 
+bgcolor() {
+	background="-b $1"
+}
+
 lightmode() {
 	lightordark="-l"
 }
@@ -73,7 +67,7 @@ setwal() {
 	then
 		rm "${HOME}"/.cache/wal/schemes/_tmp*
 		convert "$image" /tmp/wallpaper.jpg &&
-		wal -i /tmp/wallpaper.jpg -o wal-set $lightordark
+		wal -i /tmp/wallpaper.jpg -o wal-set $background $lightordark
 	else
 		convert "$image" /tmp/wallpaper.jpg &&
 		wallpaper /tmp/wallpaper.jpg	
@@ -84,27 +78,47 @@ notify() {
 	notify-send -i /tmp/wallpaper.jpg
 }
 
+help() {
+	printf "\navailable flags: \n"
+	printf "search: -s (keyword) \n"
+	printf "featured: -f \n" 
+	printf "background -b (hex value) \n"
+	printf "light mode: -l \n"
+	printf \
+	"only set wallpaper (no system palette): -w \n" 
+	printf "notify when done: -n \n"
+	exit
+}
+
 flags() {
-	while getopts hflws:n opt; do
+	while getopts hfb:lws:n opt; do
 		case $opt in
-			h) help
+			h)
+			help
 			;;
 			f)
 			getapi
 			featured
 			;;
-			l) lightmode
+			b)
+			bgcolor "$OPTARG"
 			;;
-			w) setwallpaper
+			l)
+			lightmode
+			;;
+			w)
+			setwallpaper
 			;;
 			s)
 			getapi
 			searchterm "$OPTARG"
 			search
 			;;
-			n) notify
+			n)
+			notify
 			;;
-			*) help
+			*)
+			help
 			;;
 		esac
 	done
