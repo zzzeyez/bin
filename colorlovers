@@ -7,7 +7,7 @@
 #
 # requires `wal` and `jq`
 
-lightordark="-l"
+lightordark=""
 background=""
 badge="/tmp/colorlovers.png"
 
@@ -31,15 +31,14 @@ bgcolor() {
 	background="-b $1"
 }
 
-dark() {
-	lightordark=""
+lightmode() {
+	lightordark="-l"
 }
 
 convertwal() {
 	convert "$image" "$badge"
 	convert -size 228x161 gradient: /tmp/gradient.png
-	composite /tmp/gradient.png -compose Hard_light /tmp/colorlovers.png \
-		/tmp/wal.png
+	composite /tmp/gradient.png -compose Hard_light /tmp/colorlovers.png /tmp/wal.png
 }
 
 setwal() {
@@ -50,33 +49,46 @@ notify() {
 	notify-send -i "$badge" -m "$title"
 }
 
+variables() {
+	echo "api url: $colorloversurl"
+	echo "palette title: $title"
+	echo "palette badge url: $image"
+}
+
 help() {
-	echo "search: -s (keyword)"
-	echo "background color: -b (hex value)"
-	echo "darkmode: -d"
-	echo "help: -h"
+	printf "\navailable flags: \n"
+	printf "search: -s (keyword) \n"
+	printf "background color: -b (hex value) \n"
+	printf "light mode: -l \n"
+	printf "notify when finished: -n \n"
+	printf "echo api url, palette title, palette badge url \n"
+	printf "help: -h \n"
 	exit
 }
 
 multiple() {
-	while getopts s:b:dnh opt; do
+	while getopts s:b:lnxh opt; do
 		case $opt in
 			s)  
-				search "$OPTARG"
+			search "$OPTARG"
 			;;
 			b)
-				bgcolor "$OPTARG"
+			bgcolor "$OPTARG"
 			;;
-			d)
-				dark
+			l)
+			lightmode
 			;;
-			n) notify
+			n)
+			notify
+			;;
+			x)
+			variables
 			;;
 			h)
-				help
+			help
 			;;
 			*)
-				help
+			help
 			;;
 		esac
 	done
