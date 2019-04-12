@@ -18,21 +18,9 @@ notify(){
 	notify-send -m "✔ Screenshot $file.png saved" -i "$image"
 }
 
-up(){
+up() {
 	upload "$image"
 }
-
-case "$1" in
-	-n)
-	notify
-	;;
-	-u)
-	up
-	;;
-	-nu|-un)
-	notify && up
-	;;
-esac
 
 multiple() {
 	while getopts nuh opt; do
@@ -43,12 +31,14 @@ multiple() {
 			;;
 			h) echo "-n to notify when finished, -u to upload"
 			;;
+			*) echo "-n to notify, -u to upload"
+			;;
 		esac
 	done
 }
 
-if [ "$#" -gt 0 ]; then
-	screenshot &&
+if [ "$#" -ne 0 ]; then
+	screenshot
 	multiple
 else
 	screenshot

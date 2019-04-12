@@ -46,6 +46,10 @@ setwal() {
 	wal -i /tmp/wal.png -o wal-set --saturate 0.3 -n $background $lightordark
 }
 
+notify() {
+	notify-send -i "$badge" -m "$title"
+}
+
 help() {
 	echo "search: -s (keyword)"
 	echo "background color: -b (hex value)"
@@ -55,7 +59,7 @@ help() {
 }
 
 multiple() {
-	while getopts s:b:dh opt; do
+	while getopts s:b:dnh opt; do
 		case $opt in
 			s)  
 				search "$OPTARG"
@@ -65,6 +69,8 @@ multiple() {
 			;;
 			d)
 				dark
+			;;
+			n) notify
 			;;
 			h)
 				help
@@ -83,11 +89,10 @@ if [ "$#" -ne 0 ]; then
 	convertwal &&
 	setwal &&
 	echo "$colorloversurl"
-	notify-send -i "$badge" -m "$title"
 else
 	removeold
 	seturl
 	convertwal &&
 	setwal &&
-	notify-send -i "$badge" -m "$title"
+	echo "$colorloversurl"
 fi
