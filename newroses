@@ -34,50 +34,6 @@ getapi() {
 	fi	
 }
 
-searchterm() {
-	keyword="$1"
-}
-
-# credits aren't working for search
-search() {
-	entry="$((RANDOM%20))"
-	unsplashurl="https://api.unsplash.com/search/photos?client_id=$unsplashapi&query=$keyword&per_page=20"
-	searchjson=$(curl -s "$unsplashurl")
-	image="$(echo "$searchjson" | jq "{results} | .[] | .[$entry] | {urls} | .[] | {raw} | .[]" | tr -d '"')&w=1400&dpi=2"
-	#
-	username="$(echo "$featuredjson" | jq ".["results"] [$entry] | .["user"] ["name"]" | tr -d '"')"
-	#.results | .[0] .user .name
-	#{results} | .[] | .[$entry] | {user} | .[] | {name} | .[]
-	#
-	userscreenname="$(echo "$featuredjson" | jq ".["results"] [$entry] | .["user"] ["username"]" | tr -d '"')"
-	#.results | .[0] .user .username
-	#{results} | .[] | .[$entry] | {user} | .[] | {username} | .[]
-	#
-	userurl="$(echo "$featuredjson" | jq ".results | .[0] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
-	photourl="$(echo "$featuredjson" | jq ".results | .[0] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
-}
-
-featured() {
-	entry="$((RANDOM%20))"
-	unsplashurl="https://api.unsplash.com/photos?client_id=$unsplashapi&featured&per_page=20"
-	featuredjson=$(curl -s "$unsplashurl")
-	image="$(echo "$featuredjson" | jq ".[$entry] | .urls | .full" | tr -d '"')"
-	#new image="$(echo "$featuredjson" | jq "[$entry]['urls']['raw']" | tr -d '"')&w=1400&dpi=2"
-	#new old image="$(echo "$featuredjson" | jq ".[$entry] .urls .raw" | tr -d '"')&w=1400&dpi=2"
-	username="$(echo "$featuredjson" | jq ".[$entry] .user .name" | tr -d '"')"
-	userscreenname="$(echo "$featuredjson" | jq ".[$entry] .user .username" | tr -d '"')"
-	userurl="$(echo "$featuredjson" | jq ".[$entry] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
-	photourl="$(echo "$featuredjson" | jq ".[$entry] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
-	# jsonselector.com says it's like this[1]['links']['html']
-}
-
-credits() {
-	echo "wallpaper set as $photourl"
-	echo "view more photos by $username"
-	echo "at $userurl"
-	echo "photo supplied by https://unsplash.com/"
-}
-
 bgcolor() {
 	background="-b $1"
 }
@@ -88,6 +44,45 @@ lightmode() {
 
 setwallpaper() {
 	wallpaperonly="true"
+}
+
+notifyon() {
+	notifications="true"
+}
+
+searchterm() {
+	keyword="$1"
+}
+
+search() {
+	entry="$((RANDOM%20))"
+	unsplashurl="https://api.unsplash.com/search/photos?client_id=$unsplashapi&query=$keyword&per_page=20"
+	searchjson=$(curl -s "$unsplashurl")
+	image="$(echo "$searchjson" | jq "{results} | .[] | .[$entry] | {urls} | .[] | {raw} | .[]" | tr -d '"')&w=1400&dpi=2"
+	username="$(echo "$searchjson" | \
+		jq ".results | .[$entry] .user .name" | tr -d '"')"
+	userscreenname="$(echo "$searchjson" | \
+		jq ".results | .[$entry] .user .username" | tr -d '"')"
+	userurl="$(echo "$searchjson" | \
+		jq ".results | .[$entry] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+	photourl="$(echo "$searchjson" | \
+		jq ".results | .[$entry] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+}
+
+featured() {
+	entry="$((RANDOM%20))"
+	unsplashurl="https://api.unsplash.com/photos?client_id=$unsplashapi&featured&per_page=20"
+	featuredjson=$(curl -s "$unsplashurl")
+	image="$(echo "$featuredjson" | \
+		jq ".[$entry] | .urls | .full" | tr -d '"')"
+	username="$(echo "$featuredjson" | \
+		jq ".[$entry] .user .name" | tr -d '"')"
+	userscreenname="$(echo "$featuredjson" | \
+		jq ".[$entry] .user .username" | tr -d '"')"
+	userurl="$(echo "$featuredjson" | \
+		jq ".[$entry] .user .links .self" | tr -d '"')?utm_source=newroses&utm_medium=referral"
+	photourl="$(echo "$featuredjson" | \
+		jq ".[$entry] .links .html" | tr -d '"')?utm_source=newroses&utm_medium=referral"
 }
 
 setwal() {
@@ -103,7 +98,17 @@ setwal() {
 }
 
 notify() {
-	notify-send -i /tmp/wallpaper.jpg
+	if [[ $notifications ]]; then
+		notify-send -i /tmp/wallpaper.jpg -m "photo by $username ($userscreenname)"
+	fi
+}
+
+credits() {
+	echo "wallpaper set as:"
+	echo "$photourl"
+	echo "photo by $username ($userscreenname)"
+	echo "$userurl"
+	echo "photo supplied by https://unsplash.com/"
 }
 
 variables() {
@@ -157,7 +162,7 @@ flags() {
 			search
 			;;
 			n)
-			notify
+			notifyon
 			;;
 			x)
 			variables
@@ -172,9 +177,11 @@ flags() {
 if [ "$#" -ne 0 ]; then
 	flags "$@"
 	setwal
+	notify
 	credits
 else
 	featured
 	setwal
+	notify
 	credits
 fi

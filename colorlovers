@@ -7,7 +7,7 @@
 #
 # requires `wal` and `jq`
 
-lightordark=""
+lightmode=""
 background=""
 badge="/tmp/colorlovers.png"
 
@@ -19,20 +19,24 @@ search() {
 	keyword="$1"
 }
 
-seturl() {
-	entry="$((RANDOM%50))"
-	colorloversurl="http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"
-	colorlovers=$(curl -s "$colorloversurl")
-	image=$(echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"')
-	title=$(echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"')
+notifyon() {
+	notifications="true"
+}
+
+lightmode() {
+	lightordark="-l"
 }
 
 bgcolor() {
 	background="-b $1"
 }
 
-lightmode() {
-	lightordark="-l"
+seturl() {
+	entry="$((RANDOM%50))"
+	colorloversurl="http://www.colourlovers.com/api/palettes/top&format=json&numResults=50&keywords=$keyword"
+	colorlovers=$(curl -s "$colorloversurl")
+	image=$(echo "$colorlovers" | jq ".[$entry] | .imageUrl" | tr -d '"')
+	title=$(echo "$colorlovers" | jq ".[$entry] | .title" | tr -d '"')
 }
 
 convertwal() {
@@ -42,11 +46,13 @@ convertwal() {
 }
 
 setwal() {
-	wal -i /tmp/wal.png -o wal-set --saturate 0.3 -n $background $lightordark
+	wal -i /tmp/wal.png -o wal-set -n $background $lightordark
 }
 
 notify() {
-	notify-send -i "$badge" -m "$title"
+	if [[ $notifications ]]; then
+		notify-send -i "$badge" -m "$title"
+	fi
 }
 
 variables() {
@@ -79,7 +85,7 @@ multiple() {
 			lightmode
 			;;
 			n)
-			notify
+			notifyon
 			;;
 			x)
 			variables
@@ -98,13 +104,13 @@ if [ "$#" -ne 0 ]; then
 	multiple "$@"
 	removeold
 	seturl
-	convertwal &&
-	setwal &&
-	echo "$colorloversurl"
+	convertwal
+	setwal
+	notify
 else
 	removeold
 	seturl
-	convertwal &&
-	setwal &&
-	echo "$colorloversurl"
+	convertwal
+	setwal
+	notify
 fi
