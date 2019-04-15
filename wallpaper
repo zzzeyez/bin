@@ -10,22 +10,33 @@
 
 image="/tmp/solidbg.png"
 image2="/tmp/solidbg2.png"
-help="wallpaper accepts the following inputs: Wal color number, image address, hex value
-so for example:
-wallpaper 5
-wallpaper ./smiledog.jpg
-wallpaper dddddd"
+
+help() {
+	printf "available inputs: Wal color number, image address, hex value \n"
+	printf "so for example: \n"
+	printf "wallpaper 8 \n"
+	printf "wallpaper ./smiledog.jpg \n"
+	printf "wallpaper dddddd \n \n"
+	printf "or you can save the current wallpaper: \n"
+	printf -- "--save (filename) (directory) \n"
+	printf "(arguments are optional) \n"
+}
 
 set_wallpaper() {
-	METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) { print "osascript" } else{ print "sqlite3"  } }')
+	METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) \
+		{ print "osascript" } else{ print "sqlite3"  } }')
 	case $METHOD in
         osascript)
-		osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"${1}\""
+		osascript -e "tell application \"Finder\" to set desktop picture \
+			to POSIX file \"${1}\""
 	;;
 	sqlite3)
-		current_path=$(sqlite3 -noheader -batch ${HOME}/Library/Application\ Support/Dock/desktoppicture.db 'select value from data limit 1')
+		current_path=$(sqlite3 -noheader -batch \
+			${HOME}/Library/Application\ Support/Dock/desktoppicture.db \
+			'select value from data limit 1')
 		if [[ "$current_path" != "$1" ]]; then
-			sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '${1}'" && killall Dock
+			sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db \
+				"update data set value = '${1}'" && killall Dock
 		fi
 	;;
 	*)
@@ -34,9 +45,24 @@ set_wallpaper() {
 	esac
 }
 
-case "$1" in
+save() {
+	savedir="$3"
+	savename="$2"
+	savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}"
+	if [[ -e "$savefile.png" ]]
+	then
+		i=0
+		savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}$((++i))"
+	fi
+	echo "$savefile.png saved"
+	cp "$image" "$savefile.png" &&
+	notify-send -m "saved $savefile.png" -i "$savefile.png"
+	exit
+}
 
-	-h|-H|--help) echo "$help" && exit ;;
+case "$1" in
+	-h|-H|--help) help && exit ;;
+	-s|--save) save "$@" ;;
 	0) convert -size 5x5 xc:"$color0" "$image" ;;
 	1) convert -size 5x5 xc:"$color1" "$image" ;;
 	2) convert -size 5x5 xc:"$color2" "$image" ;;
@@ -49,7 +75,6 @@ case "$1" in
 	15) convert -size 5x5 xc:"$color15" "$image" ;;
 	*.*) cp "$1" "$image" ;;
 	*) convert -size 5x5 xc:\#"$1" "$image" ;;
-
 esac
 
 # osascript does not allow you to repeatedly set as same image
