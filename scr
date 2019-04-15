@@ -22,7 +22,7 @@ up() {
 	upload "$image"
 }
 
-multiple() {
+flags() {
 	while getopts nuh opt; do
 		case $opt in
 			n) notify
@@ -39,7 +39,7 @@ multiple() {
 
 if [ "$#" -ne 0 ]; then
 	screenshot
-	multiple
+	flags "$@"
 else
 	screenshot
 fi
