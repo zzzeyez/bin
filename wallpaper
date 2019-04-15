@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
+#
 # author: daniel neemann (@zzzeyez)
 #
 # sets wallpaper from `wal` color number,
 # image address or hex value
-#
-#
+
 
 . "$HOME/.cache/wal/colors.sh"
 
@@ -48,14 +48,18 @@ set_wallpaper() {
 save() {
 	savedir="$3"
 	savename="$2"
-	savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}"
-	if [[ -e "$savefile.png" ]]
+	savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}/"
+	if [[ -e $savefile.png ]]
 	then
 		i=0
-		savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}$((++i))"
+		while [[ -e $savefile-$i.png ]] 
+		do
+	        	(( i++ ))
+	    	done
+	savefile=$savefile-$i
 	fi
-	echo "$savefile.png saved"
 	cp "$image" "$savefile.png" &&
+	echo "$savefile.png saved"
 	notify-send -m "saved $savefile.png" -i "$savefile.png"
 	exit
 }
