@@ -4,6 +4,8 @@
 
 **wal-set** expand `Wal` colors to `Pecan`, `Xanthia` and `Pollen` (requires `Sassc`)
 
+**lyrics** fetch song lyrics into terminal
+
 **battery** echo current battery percentage
 
 **network** echo current wi-fi network
