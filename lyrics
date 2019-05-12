@@ -4,9 +4,15 @@
 rm -rf /tmp/lyrics/
 mkdir /tmp/lyrics
 touch /tmp/lyrics/dummy
-SONG=$@
+if [[ -z $1 ]] ; then
+	SONG=$(mpc current)
+else
+	SONG=$@
+fi
 LYRICS=$(echo "$SONG" | sed -e 's/\(.*\)/\1/' \
 	-e 's/[\.,()?\:\x27#]//g' \
+	-e "s/\'//g" \
+	-e 's/-//g' \
 	-e 's/&/and/g' \
 	-e 's/ feat .*//g' \
 	-e '/remix/!s/ - .*//g' \

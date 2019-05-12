@@ -12,14 +12,25 @@ image="/tmp/solidbg.png"
 image2="/tmp/solidbg2.png"
 
 help() {
-	printf "available inputs: Wal color number, image address, hex value \n"
+	printf "available inputs: Wal color number, image address, directory, hex value \n"
 	printf "so for example: \n"
 	printf "wallpaper 8 \n"
 	printf "wallpaper ./smiledog.jpg \n"
+	printf "wallpaper ~/wallpapers/ \n"
 	printf "wallpaper dddddd \n \n"
 	printf "or you can save the current wallpaper: \n"
-	printf -- "--save (filename) (directory) \n"
-	printf "(arguments are optional) \n"
+}
+
+single() {
+	path="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+}
+
+random() {
+	dir="$1"
+	n_files=`/bin/ls -1 "$dir" | wc -l | cut -f1`
+	rand_num=`awk "BEGIN{srand();print int($n_files * rand()) + 1;}"`
+	file=`/bin/ls -1 "$dir" | sed -ne "${rand_num}p"`
+	path=`cd $dir && echo "$PWD/$file"` # Converts to full path. 
 }
 
 set_wallpaper() {
@@ -45,28 +56,8 @@ set_wallpaper() {
 	esac
 }
 
-save() {
-	savedir="$3"
-	savename="$2"
-	savefile="${savedir:-${HOME}/Downloads}/${savename:-wallpaper}/"
-	if [[ -e $savefile.png ]]
-	then
-		i=0
-		while [[ -e $savefile-$i.png ]] 
-		do
-	        	(( i++ ))
-	    	done
-	savefile=$savefile-$i
-	fi
-	cp "$image" "$savefile.png" &&
-	echo "$savefile.png saved"
-	notify-send -m "saved $savefile.png" -i "$savefile.png"
-	exit
-}
-
 case "$1" in
 	-h|-H|--help) help && exit ;;
-	-s|--save) save "$@" ;;
 	0) convert -size 5x5 xc:"$color0" "$image" ;;
 	1) convert -size 5x5 xc:"$color1" "$image" ;;
 	2) convert -size 5x5 xc:"$color2" "$image" ;;
@@ -77,13 +68,17 @@ case "$1" in
 	7) convert -size 5x5 xc:"$color7" "$image" ;;
 	8) convert -size 5x5 xc:"$color8" "$image" ;;
 	15) convert -size 5x5 xc:"$color15" "$image" ;;
-	*.*) cp "$1" "$image" ;;
-	*) convert -size 5x5 xc:\#"$1" "$image" ;;
+	*.*) single "$1" ;;
+	*) random "$1" ;;
 esac
 
 # osascript does not allow you to repeatedly set as same image
 # so we generate an additional image
-convert -size 5x5 xc:"$color0" "$image2" &&
-set_wallpaper "$image2" &&
-set_wallpaper "$image"
-
+if [[ -z "$path" ]] ; then
+	convert -size 5x5 xc:"$color0" "$image2"
+	set_wallpaper "$image2"
+	set_wallpaper "$image"
+	sleep 0.5s && rm $image & rm $image2
+else
+	set_wallpaper "$path"
+fi
