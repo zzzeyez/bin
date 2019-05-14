@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 sassc --style expanded "${HOME}/scripts/pollen/scss/style.scss" > "${HOME}/scripts/pollen/style.css" &
 chunkborder
 bash "${HOME}/scripts/pecan/wal-set" &&
