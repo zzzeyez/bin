@@ -1,10 +1,12 @@
 ## macOS
 
-**wallpaper** set wallpaper for current workspace as image, hex value or `Wal` color
+**wallpaper** set wallpaper for current workspace as image, hex value or `wal` color
 
-**wal-set** expand `Wal` colors to `Pecan`, `Xanthia` and `Pollen` (requires `Sassc`)
+**wal-set** expand `wal` colors to `pecan`, `xanthia` and `pollen` (requires `sassc`)
 
 **lyrics** fetch song lyrics into terminal
+
+**palette** print yr colors
 
 **battery** echo current battery percentage
 
@@ -18,11 +20,9 @@
 
 **togglebar** toggle `ubersicht` and `lastfm`
 
-**lastfm** notifies and displays artwork for current track (requires `Xanthia` and `jq`)
+**darkmode** toggle macos darkmode
 
-**colorlovers** colorlovers.com palettes for system colors (requires `wal` and `jq`)
-
-**newroses** unsplash.com images as wallpapers or `wal` schemes (requires `wallpaper`)
+**lastfm** notifies and displays artwork for current track (requires `xanthia` and `jq`)
 
 ## Linux
 

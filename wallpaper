@@ -4,12 +4,19 @@
 #
 # sets wallpaper from `wal` color number,
 # image address or hex value
-
+#
+# if this messes up Finder then run this:
+# 
 
 . "$HOME/.cache/wal/colors.sh"
 
-image="/tmp/solidbg.png"
+image="/tmp/wallpaper.png"
 image2="/tmp/solidbg2.png"
+notify="on"
+
+exists () {
+    type "$1" &> /dev/null ;
+}
 
 help() {
 	printf "available inputs: Wal color number, image address, directory, hex value \n"
@@ -30,7 +37,15 @@ random() {
 	n_files=`/bin/ls -1 "$dir" | wc -l | cut -f1`
 	rand_num=`awk "BEGIN{srand();print int($n_files * rand()) + 1;}"`
 	file=`/bin/ls -1 "$dir" | sed -ne "${rand_num}p"`
-	path=`cd $dir && echo "$PWD/$file"` # Converts to full path. 
+	path=`cd $dir && echo "$PWD/$file"` # Converts to full path
+}
+
+store() {
+	if test -e $path -a $(file -b --mime-type $path) = "image/png"; then
+		cp "$path" "$image"
+	else
+		convert "$path" "$image"
+	fi
 }
 
 set_wallpaper() {
@@ -56,18 +71,30 @@ set_wallpaper() {
 	esac
 }
 
+notify() {
+	notify="$(which notify-send)"
+	if [ -x "$notify" ] ; then
+		if [[ "$path" ]] ; then
+			notify-send -i "$path" -m "wallpaper set as $path"
+		else
+			notify-send -i "$image" -m "wallpaper set as $color"
+		fi
+	fi
+}
+
 case "$1" in
 	-h|-H|--help) help && exit ;;
-	0) convert -size 5x5 xc:"$color0" "$image" ;;
-	1) convert -size 5x5 xc:"$color1" "$image" ;;
-	2) convert -size 5x5 xc:"$color2" "$image" ;;
-	3) convert -size 5x5 xc:"$color3" "$image" ;;
-	4) convert -size 5x5 xc:"$color4" "$image" ;;
-	5) convert -size 5x5 xc:"$color5" "$image" ;;
-	6) convert -size 5x5 xc:"$color6" "$image" ;;
-	7) convert -size 5x5 xc:"$color7" "$image" ;;
-	8) convert -size 5x5 xc:"$color8" "$image" ;;
-	15) convert -size 5x5 xc:"$color15" "$image" ;;
+	-x) rm ~/Library/Application\ Support/Dock/desktoppicture.db ;;
+	0) convert -size 5x5 xc:"$color0" "$image" & color="$color0" ;;
+	1) convert -size 5x5 xc:"$color1" "$image" & color="$color1" ;;
+	2) convert -size 5x5 xc:"$color2" "$image" & color="$color1" ;;
+	3) convert -size 5x5 xc:"$color3" "$image" & color="$color1" ;;
+	4) convert -size 5x5 xc:"$color4" "$image" & color="$color1" ;;
+	5) convert -size 5x5 xc:"$color5" "$image" & color="$color1" ;;
+	6) convert -size 5x5 xc:"$color6" "$image" & color="$color1" ;;
+	7) convert -size 5x5 xc:"$color7" "$image" & color="$color1" ;;
+	8) convert -size 5x5 xc:"$color8" "$image" & color="$color1" ;;
+	15) convert -size 5x5 xc:"$color15" "$image" & color="$color1" ;;
 	*.*) single "$1" ;;
 	*) random "$1" ;;
 esac
@@ -75,10 +102,11 @@ esac
 # osascript does not allow you to repeatedly set as same image
 # so we generate an additional image
 if [[ -z "$path" ]] ; then
-	convert -size 5x5 xc:"$color0" "$image2"
-	set_wallpaper "$image2"
+	if [[ -f "$image2" ]] ; then
+		convert -size 5x5 xc:"#aaaaaa" "$image2"
+	fi
+	notify & set_wallpaper "$image2"
 	set_wallpaper "$image"
-	sleep 0.5s && rm $image & rm $image2
 else
-	set_wallpaper "$path"
+	notify & set_wallpaper "$path" & store
 fi

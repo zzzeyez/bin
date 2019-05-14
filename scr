@@ -11,21 +11,23 @@ image="$dir/$file.png"
 
 screenshot() {
 	mkdir -p "$dir"
-	screencapture -i "$image"
-}
-
-notify(){
-	notify-send -m "✔ Screenshot $file.png saved" -i "$image"
+	screencapture -i "$image" &&
+	if [[ "$notify" ]] ; then
+		notify-send -m "✔ Screenshot $file.png saved" -i "$image"
+	fi
 }
 
 up() {
-	upload "$image"
+	upload "$image" &&
+	if [[ "$notify" ]] ; then
+		notify-send "$image uploaded"
+	fi
 }
 
 flags() {
 	while getopts nuh opt; do
 		case $opt in
-			n) notify
+			n) notify="on"
 			;;
 			u) up
 			;;

@@ -18,6 +18,8 @@ if [ $? -eq 0 ]; then
 else
 	open /Applications/Übersicht.app &
 	lastfm &
+	height="$(awk '/--pecan-chunkwm-bar:/{print $NF}' ${HOME}/scripts/pecan/style.css | tr -d ';')"
+	chunkc set custom_bar_offset_top "$height"
 	chunkc set custom_bar_enabled 1
 	chunkc core::unload tiling.so
 	chunkc core::load tiling.so
