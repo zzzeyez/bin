@@ -49,8 +49,7 @@ store() {
 }
 
 set_wallpaper() {
-	METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) \
-		{ print "osascript" } else{ print "sqlite3"  } }')
+	METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) { print "osascript" } else{ print "sqlite3"  } }')
 	case $METHOD in
         osascript)
 		osascript -e "tell application \"Finder\" to set desktop picture \
