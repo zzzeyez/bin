@@ -6,6 +6,8 @@
 
 **lyrics** fetch song lyrics into terminal
 
+**note** add to current notes file or print random line from random note file
+
 **palette** print yr colors
 
 **battery** echo current battery percentage

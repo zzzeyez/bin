@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# tool for managing my notes
+# author: daniel neemann (@zzzeyez)
+# requires `shuf`
+
+dir="${HOME}/text/notes"
+file="$dir/2019"
+
+note() {
+	note="$@"
+	printf "\n\n$note" >> "$file"
+	file="$(basename $file)"
+}
+
+random() {
+	n_files="$(/bin/ls -1 "$dir" | wc -l | cut -f1)"
+	rand_num="$(awk "BEGIN{srand();print int($n_files * rand()) + 1;}")"
+	file="$(/bin/ls -1 "$dir" | sed -ne "${rand_num}p")"
+	path="$(cd $dir && echo "$PWD/$file")" # Converts to full path
+	note="$(cat "$path" | sed '/^$/d' | shuf -n 1)"
+}
+
+notify() {
+	if [[ "$notify" ]] ; then
+		notify-send "$note ($file)"
+	fi
+	if [[ -z "$quiet" ]] ; then
+		echo "$note ($file)"
+	fi
+}
+
+flags() {
+	while getopts nqo opt; do
+		case $opt in
+			n)
+			notify="on"
+			;;
+			q)
+			quiet="on"
+			;;
+			o)
+			nvim "$file"
+			exit
+			;;
+		esac
+	done
+	shift "$((OPTIND-1))" 
+	if [ "$1" != "-*" ] && [ "$1" ] ;
+	then
+		note "$@"
+		notify
+		exit
+	fi
+}
+if [ "$#" -ne 0 ]; then
+	flags "$@"
+	random
+	notify
+else
+	random
+	notify
+fi
