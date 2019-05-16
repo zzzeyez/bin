@@ -10,16 +10,6 @@
 image="/tmp/wallpaper.png"
 image2="/tmp/solidbg2.png"
 
-help() {
-	printf "available inputs: Wal color number, image address, directory, hex value \n"
-	printf "so for example: \n"
-	printf "wallpaper 8 \n"
-	printf "wallpaper ./smiledog.jpg \n"
-	printf "wallpaper ~/wallpapers/ \n"
-	printf "wallpaper dddddd \n \n"
-	printf "or you can save the current wallpaper: \n"
-}
-
 single() {
 	path="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
 }
@@ -32,12 +22,21 @@ random() {
 	path="$(cd $dir && echo "$PWD/$file")" # Converts to full path
 }
 
+duplicate () {
+	# osascript does not allow you to repeatedly set as same image
+	# so we generate an additional image
+	if [ ! -f "$image2" ] ; then
+		convert -size 5x5 xc:"#aaaaaa" "$image2"
+	fi
+	set_wallpaper "$image2" &&
+	rm "$image2"
+}
+
 walcolor() {
 	source "${HOME}/.cache/wal/colors.sh"
 	declare -n walcolor=color$1
 	color="$walcolor"
 	convert -size 5x5 xc:"$color" "$image"
-#	notify-send -i "$image" -m "$color"
 }
 
 store() {
@@ -58,8 +57,7 @@ set_wallpaper() {
 	sqlite3)
 		current_path=$(sqlite3 -noheader -batch ${HOME}/Library/Application\ Support/Dock/desktoppicture.db 'select value from data limit 1')
 		if [[ "$current_path" != "$1" ]]; then
-			sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db \
-				"update data set value = '${1}'" && killall Dock
+			sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '${1}'" && killall Dock
 		fi
 	;;
 	*)
@@ -78,18 +76,33 @@ notify() {
 	fi
 }
 
+help() {
+	printf "available inputs: Wal color number, image address, directory, hex value \n"
+	printf "so for example: \n"
+	printf "wallpaper 8 \n"
+	printf "wallpaper ./smiledog.jpg \n"
+	printf "wallpaper ~/wallpapers/ \n"
+	printf "wallpaper dddddd \n \n"
+	printf "-x to alleviate broken wallpaper \n"
+	printf "-p to open current wallpaper in feh\n"
+}
+
 flags() {
-	while getopts nh opt; do
+	while getopts nphx opt; do
 		case $opt in
 			n)
 			notify="$(which notify-send)"
+			;;
+			p)
+			feh "$image"
+			exit
 			;;
 			h)
 			help
 			exit
 			;;
 			x)
-			rm "${HOME}/Library/Application\ Support/Dock/desktoppicture.db"
+			rm "${HOME}/Library/Application Support/Dock/desktoppicture.db" && killall Dock
 			exit
 			;;
 			*)
@@ -111,18 +124,14 @@ flags() {
 
 if [ "$#" -ne 0 ]; then
 	flags "$@"
-	# osascript does not allow you to repeatedly set as same image
-	# so we generate an additional image
 	if [[ -z "$path" ]] ; then
-		if [[ -f "$image2" ]] ; then
-			convert -size 5x5 xc:"#aaaaaa" "$image2"
-		fi
-		notify & set_wallpaper "$image2"
-		set_wallpaper "$image"
+		duplicate &&
+		set_wallpaper "$image" &&
+		notify
 	else
-		notify & set_wallpaper "$path" & store
+		set_wallpaper "$path" & store &&
+		notify
 	fi
 else
-	help
-	exit
+	help && exit
 fi
