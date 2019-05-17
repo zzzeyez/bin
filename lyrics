@@ -5,7 +5,13 @@ rm -rf /tmp/lyrics/
 mkdir /tmp/lyrics
 touch /tmp/lyrics/dummy
 if [[ -z $1 ]] ; then
-	SONG=$(mpc current)
+	if mpc status | awk 'NR==2' | grep playing >/dev/null ; then
+		source="ncmpcpp"
+		SONG="$(mpc current)"
+	else
+		source="lastfm"
+		SONG="$(lastfm -o)"
+	fi
 else
 	SONG=$@
 fi
@@ -24,6 +30,7 @@ LYRICS=$(echo "$SONG" | sed -e 's/\(.*\)/\1/' \
 	|tr -d '\200-\377')-lyrics 
 rm /tmp/lyrics/*
 if wget -q https://genius.com/$LYRICS -O /tmp/lyrics/$LYRICS; then
+	printf "$SONG ($source)\n"
 	cat /tmp/lyrics/$LYRICS \
 		|grep -e '<div' -e '<br>' -e '</a>' -e '</p>' \
 			|tr -d "\n" \
@@ -39,6 +46,6 @@ if wget -q https://genius.com/$LYRICS -O /tmp/lyrics/$LYRICS; then
 			-e 's/<a.*{//g' \
 			-e 's/&amp;/\&/g'
 else
-	echo "Could not retrive lyrics from https://genius.com/$LYRICS"
+	echo "Could not retrive lyrics from https://genius.com/$LYRICS ($source)"
 fi
 rm -rf /tmp/lyrics

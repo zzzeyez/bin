@@ -7,20 +7,108 @@
 # please don't use my included api key
 # generate your own at last.fm/api/account/create
 
-last=""
+cache="${HOME}/.cache/lastfm"
 
-while true; do
-	lastfm=`curl -s "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=em3i3mei&api_key=e27e6814188f7fc3da7fe91703faf865&format=json"`
-	artist=`echo "$lastfm" | jq ".[] | .track | .[0] | .artist " | tr -d "\#" | jq ".text" | tr -d '"'`
-	track=`echo "$lastfm" | jq ".[] | .track | .[0] | .name" | tr -d '"'`
-	album=`echo "$lastfm" | jq ".[] | .track | .[0] | .album " | tr -d "\#" | jq ".text" | tr -d '"'`
-	art=`echo "$lastfm" | jq '.[] | .track | .[0] | .image[3] | .["#text"]' | tr -d '"'`
-	image=`echo ${art:-/Users/zzzeyez/scripts/albumart/none.jpg}`
-	current="$artist - $track"
-	if [ "$last" != "$current" ]
-		then
-			notify-send -m "♫ $current" -i "$image"
-        	last="$current"
+getapi() {
+	if mpc status | awk 'NR==2' | grep playing >/dev/null ; then
+		source='ncmpcpp'
+		current="$(mpc current)"
+		artist="$(mpc current -f %albumartist%)"
+		album="$(mpc current -f %album%)"
+		lastfm_url="http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=e27e6814188f7fc3da7fe91703faf865&artist=$artist&album=$album&format=json"
+		lastfm="$(curl -s "$lastfm_url")"
+		art="$(echo "$lastfm" | jq -r '.[] | .image[3] | .["#text"]' | tr -d '"')"
+	else
+		source='last.fm'
+		lastfm=`curl -s "http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=em3i3mei&api_key=e27e6814188f7fc3da7fe91703faf865&format=json"`
+		artist=`echo "$lastfm" | jq ".[] | .track | .[0] | .artist " | tr -d "\#" | jq ".text" | tr -d '"'`
+		track=`echo "$lastfm" | jq ".[] | .track | .[0] | .name" | tr -d '"'`
+		album=`echo "$lastfm" | jq ".[] | .track | .[0] | .album " | tr -d "\#" | jq ".text" | tr -d '"'`
+		art=`echo "$lastfm" | jq '.[] | .track | .[0] | .image[3] | .["#text"]' | tr -d '"'`
+		current="$artist - $track"
+	fi
+}
+
+cache() {
+	mkdir -p $cache
+	file="$cache/${artist//[^[:alnum:]]/}-${album//[^[:alnum:]]/}.png"
+	if [[ -f "$file" ]] ; then
+		downloading=' artwork found in cache'
+		art="$file"
+	else
+		downloading=' downloading artwork..'
+		convert "$art" "$file" &&
+		art="$file"
+	fi
+	if [[ "$verbose" ]] ; then
+		verbose=" ($source)$downloading"
+	fi
+}
+
+notify() {
+	if [[ "$preview" ]] ; then
+		echo "opening $art"
+		feh "$art"
+		exit
+	elif [[ "$notify" ]] ; then
+		notify-send -m "♫ $current$verbose" -i "$art"
+	fi
+	if [[ -z "$quiet" ]] ; then
+		echo "$current$verbose"
+	fi
+	if [[ "$oneshot" ]] ; then
+		exit
+	fi
+}
+
+main() {
+	last=""
+	while true; do
+		getapi
+		if [ "$last" != "$current" ] ; then
+			if [[ "$notify" ]] || [[ "$preview" ]] ; then
+				cache
+			fi
+			notify
+			last="$current"
 		fi
-	sleep 5s;
- done
+		sleep 5s;
+	done
+}
+
+flags() {
+	while getopts qvnoph opt; do
+		case $opt in
+			q)
+			quiet="on"
+			;;
+			v)
+			verbose="on"
+			;;
+			n)
+			notify="on"
+			;;
+			o)
+			oneshot="on"
+			;;
+			p)
+			preview="on"
+			;;
+			h)
+			help
+			exit
+			;;
+		esac
+	done
+}
+
+if [ "$#" -ne 0 ]; then
+	flags "$@" &&
+	main
+else
+	main
+fi
+
+# todo
+#
+# ' in %album% breaks script
