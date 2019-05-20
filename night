@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+i="$(pgrep redshift)"
+
+test ! -e $i && killall redshift || redshift -O 4000 & disown
+

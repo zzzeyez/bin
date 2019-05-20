@@ -33,11 +33,11 @@ cache() {
 	mkdir -p $cache
 	file="$cache/${artist//[^[:alnum:]]/}-${album//[^[:alnum:]]/}.png"
 	if [[ -f "$file" ]] ; then
-		downloading=' artwork found in cache'
+		downloading=''
 		art="$file"
 	else
-		downloading=' downloading artwork..'
-		convert "$art" "$file" &&
+		curl -o "$file" "$art"&>/dev/null &&
+		downloading=' artwork downloaded' &&
 		art="$file"
 	fi
 	if [[ "$verbose" ]] ; then
@@ -51,7 +51,11 @@ notify() {
 		feh "$art"
 		exit
 	elif [[ "$notify" ]] ; then
-		notify-send -m "♫ $current$verbose" -i "$art"
+		if [[ -f "$art" ]] ; then
+			notify-send -m "♫ $current$verbose" -i "$art"
+		else
+			notify-send -m "♫ $current$verbose"
+		fi
 	fi
 	if [[ -z "$quiet" ]] ; then
 		echo "$current$verbose"

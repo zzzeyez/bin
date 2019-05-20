@@ -48,22 +48,26 @@ store() {
 }
 
 set_wallpaper() {
-	METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) { print "osascript" } else{ print "sqlite3"  } }')
-	case $METHOD in
-        osascript)
-		osascript -e "tell application \"Finder\" to set desktop picture \
-			to POSIX file \"${1}\""
-	;;
-	sqlite3)
-		current_path=$(sqlite3 -noheader -batch ${HOME}/Library/Application\ Support/Dock/desktoppicture.db 'select value from data limit 1')
-		if [[ "$current_path" != "$1" ]]; then
-			sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '${1}'" && killall Dock
-		fi
-	;;
-	*)
-		echo "error setting wallpaper" && exit 1
-	;;
+	if [[ "$single" ]] ; then
+		osascript -e "tell application \"Finder\" to set desktop picture to POSIX file \"${1}\""
+	else
+		METHOD=$(sw_vers -productVersion | awk -F'.' '{ if ($1 < 10 || $2 < 9) { print "osascript" } else{ print "sqlite3"  } }')
+		case $METHOD in
+	        osascript)
+			osascript -e "tell application \"Finder\" to set desktop picture \
+				to POSIX file \"${1}\""
+		;;
+		sqlite3)
+			current_path=$(sqlite3 -noheader -batch ${HOME}/Library/Application\ Support/Dock/desktoppicture.db 'select value from data limit 1')
+			if [[ "$current_path" != "$1" ]]; then
+				sqlite3 ${HOME}/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '${1}'" && killall Dock
+			fi
+		;;
+		*)
+			echo "error setting wallpaper" && exit 1
+		;;
 	esac
+	fi
 }
 
 notify() {
@@ -83,15 +87,20 @@ help() {
 	printf "wallpaper ./smiledog.jpg \n"
 	printf "wallpaper ~/wallpapers/ \n"
 	printf "wallpaper dddddd \n \n"
+	printf "-n to alert notify-send \n"
+	printf "-s to apply to current workspace only \n"
 	printf "-x to alleviate broken wallpaper \n"
 	printf "-p to open current wallpaper in feh\n"
 }
 
 flags() {
-	while getopts nphx opt; do
+	while getopts nsphx opt; do
 		case $opt in
 			n)
 			notify="$(which notify-send)"
+			;;
+			s)
+			single="on"
 			;;
 			p)
 			feh "$image"
@@ -102,7 +111,7 @@ flags() {
 			exit
 			;;
 			x)
-			rm "${HOME}/Library/Application Support/Dock/desktoppicture.db" && killall Dock
+			rm "${HOME}/Library/Application Support/Dock/desktoppicture.db" && killall Dock && killall Finder
 			exit
 			;;
 			*)

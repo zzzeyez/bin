@@ -18,9 +18,11 @@ screenshot() {
 }
 
 up() {
-	upload "$image" &&
-	if [[ "$notify" ]] ; then
-		notify-send "$image uploaded"
+	if [[ "$upload" ]] ; then
+		upload "$image"
+		if [[ "$notify" ]] ; then
+			notify-send "$(pbpaste) uploaded"
+		fi
 	fi
 }
 
@@ -29,7 +31,7 @@ flags() {
 		case $opt in
 			n) notify="on"
 			;;
-			u) up
+			u) upload="on"
 			;;
 			h) echo "-n to notify when finished, -u to upload"
 			;;
@@ -40,8 +42,9 @@ flags() {
 }
 
 if [ "$#" -ne 0 ]; then
-	screenshot
 	flags "$@"
+	screenshot
+	upload
 else
 	screenshot
 fi

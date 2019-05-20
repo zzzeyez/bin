@@ -16,7 +16,17 @@ if [ $? -eq 0 ]; then
 else
 	open /Applications/Übersicht.app &
 	height="$(awk '/--pecan-chunkwm-bar:/{print $NF}' ${HOME}/scripts/pecan/style.css | tr -d ';')"
+	gaps="$(awk '/--pecan-chunkwm-gaps:/{print $NF}' ${HOME}/scripts/pecan/style.css | tr -d ';')"
 	chunkc set custom_bar_offset_top "$height"
+	chunkc set global_desktop_offset_gap "$gaps"
+	chunkc set global_desktop_offset_top "$gaps"
+	chunkc set global_desktop_offset_bottom "$gaps"
+	chunkc set global_desktop_offset_left "$gaps"
+	chunkc set global_desktop_offset_right "$gaps"
+	chunkc set 1_desktop_offset_top "$gaps"
+	chunkc set 1_desktop_offset_bottom "$gaps"
+	chunkc set 1_desktop_offset_left "$gaps"
+	chunkc set 1_desktop_offset_right "$gaps"
 	chunkc set custom_bar_enabled 1
 	chunkc core::unload tiling.so
 	chunkc core::load tiling.so
