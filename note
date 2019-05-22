@@ -3,8 +3,8 @@
 # author: daniel neemann (@zzzeyez)
 # requires `shuf`
 
-dir="${HOME}/text/notes"
-file="$dir/2019"
+dir="${HOME}/text/poetry"
+file="$dir/2019.txt"
 
 note() {
 	note="$@"

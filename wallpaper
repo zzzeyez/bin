@@ -81,25 +81,25 @@ notify() {
 }
 
 help() {
-	printf "available inputs: Wal color number, image address, directory, hex value \n"
-	printf "so for example: \n"
-	printf "wallpaper 8 \n"
-	printf "wallpaper ./smiledog.jpg \n"
-	printf "wallpaper ~/wallpapers/ \n"
-	printf "wallpaper dddddd \n \n"
-	printf "-n to alert notify-send \n"
-	printf "-s to apply to current workspace only \n"
-	printf "-x to alleviate broken wallpaper \n"
-	printf "-p to open current wallpaper in feh\n"
+	echo "available inputs: Wal color number, image address, directory, hex value "
+	echo "so for example: "
+	echo "wallpaper 8 "
+	echo "wallpaper ./smiledog.jpg "
+	echo "wallpaper ~/wallpapers/ "
+	echo "wallpaper dddddd  "
+	echo "-n to alert notify-send "
+	echo "-o to apply to current workspace only "
+	echo "-x to alleviate broken wallpaper "
+	echo "-p to open current wallpaper in feh"
 }
 
 flags() {
-	while getopts nsphx opt; do
+	while getopts nophx opt; do
 		case $opt in
 			n)
 			notify="$(which notify-send)"
 			;;
-			s)
+			o)
 			single="on"
 			;;
 			p)

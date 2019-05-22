@@ -15,8 +15,8 @@ if [ $? -eq 0 ]; then
 	chunkc core::load tiling.so
 else
 	open /Applications/Übersicht.app &
-	height="$(awk '/--pecan-chunkwm-bar:/{print $NF}' ${HOME}/scripts/pecan/style.css | tr -d ';')"
-	gaps="$(awk '/--pecan-chunkwm-gaps:/{print $NF}' ${HOME}/scripts/pecan/style.css | tr -d ';')"
+	height="$(awk '/--pecan-chunkwm-bar:/{print $NF}' /Users/zzzeyez/Library/Application\ Support/Übersicht/widgets/pecan/style.css | tr -d ';')"
+	gaps="$(awk '/--pecan-chunkwm-gaps:/{print $NF}' /Users/zzzeyez/Library/Application\ Support/Übersicht/widgets/pecan/style.css | tr -d ';')"
 	chunkc set custom_bar_offset_top "$height"
 	chunkc set global_desktop_offset_gap "$gaps"
 	chunkc set global_desktop_offset_top "$gaps"
@@ -31,3 +31,10 @@ else
 	chunkc core::unload tiling.so
 	chunkc core::load tiling.so
 fi
+
+# to do
+
+# incorporate this
+# defaults write NSGlobalDomain _HIHideMenuBar -bool true
+# but it requires all apps to close
+

@@ -107,12 +107,19 @@ flags() {
 }
 
 if [ "$#" -ne 0 ]; then
-	flags "$@" &&
-	main
+	flags "$@"
+	if [[ ! "$quiet" ]] ; then
+		main
+	else
+		main &>/dev/null
+	fi
 else
 	main
 fi
 
 # todo
-#
-# ' in %album% breaks script
+
+# ' in %artist% or %album% makes error messages (`jq` error?)
+# this is somewhat solved with `tr -d "`"`
+# but even with -q (quiet=on) it   spits out errors.
+# alleviated with if statement after flags..for now
