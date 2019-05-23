@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# open a new tmux window if tmux is not running
+
+i="$(pgrep tmux)"
+
+if [[ "$1" ]] ; then
+	test ! -e $i && tmux kill-window || exit
+else
+	test ! -e $i && tmux new-window || tmux
+fi

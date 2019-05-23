@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# author: daniel neemann (@zzzeyez)
+#
+# if current iterm window is tmux then make a new-window,
+# otherwise make a new-session
+#
+# requires Title set to Name (Job) in iterm2
+# (preferences -> profiles -> general)
+#
+# requires these two bindings in .tmux.conf:
+# bind-key -n C-w kill-window
+# bind-key -n C-n new-window
+
+
+new-tab () {
+    osascript -i <<EOF
+        tell application "iTerm"
+            tell current window
+				if (name = "tmux") then
+					tell application "System Events"
+						tell process "iTerm"
+							keystroke "n" using control down
+						end tell
+					end tell
+				else
+					tell the current session
+						write text "tmux new-session"
+					end tell
+                end if
+            end tell
+        end tell
+EOF
+}
+
+kill-session () {
+    osascript -i <<EOF
+        tell application "iTerm"
+            tell current window
+				if (name = "tmux") then
+					tell application "System Events"
+						tell process "iTerm"
+							keystroke "w" using control down
+						end tell
+					end tell
+				else
+					tell application "System Events"
+						tell process "iTerm"
+							keystroke "w" using command down
+						end tell
+					end tell
+                end if
+            end tell
+        end tell
+EOF
+}
+
+attach () {
+    osascript -i <<EOF
+        tell application "iTerm"
+            tell current window
+                tell the current session
+                    write text "tmux a"
+                end tell
+            end tell
+        end tell
+EOF
+}
+
+# argument was provided
+if [[ "$1" == attach ]] ; then
+
+	# if tmux is running, close attach it
+	tmux="$(pgrep tmux)"
+	if [[ "$tmux" ]] ; then
+		attach
+	fi
+
+# quit process
+elif [[ "$1" == quit ]] ; then
+	kill-session
+
+# no argument provided (start)
+else
+	new-tab
+fi
