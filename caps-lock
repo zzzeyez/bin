@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# author: daniel neemann (@zzzeyez)
+# current terminal command to map caps-lock to alt-key disables on reboot
+# so i'm doing this
+
+
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E2}]}'&>/dev/null

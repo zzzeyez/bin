@@ -6,5 +6,5 @@ i="$(ps cax | grep iTerm2)"
 if [[ ! "$i" ]] ; then
 	open -a iTerm
 else
-	osascript -e 'tell application "iTerm" to activate' -e 'tell application "System Events" to tell process "iTerm" to keystroke "t" using command down'
+	osascript -e 'tell application "iTerm" to activate' -e 'tell application "System Events" to tell process "iTerm" to keystroke "n" using command down'
 fi
