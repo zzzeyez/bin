@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# toggle menu bar and hidden files on macos
+
+menubar="${HOME}/.cache/menubar"
+
+if [[ ! -f "$menubar" ]] ; then
+	touch "$menubar"
+	defaults write NSGlobalDomain _HIHideMenuBar -bool false
+	defaults write com.apple.finder AppleShowAllFiles -bool false
+else
+	rm "$menubar"
+	defaults write com.apple.finder AppleShowAllFiles -bool true
+	defaults write NSGlobalDomain _HIHideMenuBar -bool true
+fi
+killall Finder
+killall Dock

@@ -13,56 +13,73 @@
 
 
 new-tab () {
-    osascript -i <<EOF
-        tell application "iTerm"
-            tell current window
+	osascript -i <<EOF
+		tell application "iTerm"
+			tell current window
+				
+				-- is tmux running
 				if (name = "tmux") then
 					tell application "System Events"
 						tell process "iTerm"
+							
+							-- keyboard shortcut for new-window
 							keystroke "n" using control down
 						end tell
 					end tell
+					
+				-- tmux is not running
 				else
 					tell the current session
+						
+						-- start a new session
 						write text "tmux new-session"
+						
 					end tell
-                end if
-            end tell
-        end tell
+				end if
+			end tell
+		end tell
 EOF
 }
 
 kill-session () {
-    osascript -i <<EOF
-        tell application "iTerm"
-            tell current window
+	osascript -i <<EOF
+		tell application "iTerm"
+			tell current window
+
+				-- tmux is running
 				if (name = "tmux") then
 					tell application "System Events"
 						tell process "iTerm"
+
+							-- tmux key bind for kill-window
 							keystroke "w" using control down
 						end tell
 					end tell
 				else
+
 					tell application "System Events"
 						tell process "iTerm"
+
+							-- iterm key bind for close window
 							keystroke "w" using command down
+
 						end tell
 					end tell
-                end if
-            end tell
-        end tell
+				end if
+			end tell
+		end tell
 EOF
 }
 
 attach () {
-    osascript -i <<EOF
-        tell application "iTerm"
-            tell current window
-                tell the current session
-                    write text "tmux a"
-                end tell
-            end tell
-        end tell
+	osascript -i <<EOF
+		tell application "iTerm"
+			tell current window
+				tell the current session
+					write text "tmux a"
+				end tell
+			end tell
+		end tell
 EOF
 }
 
