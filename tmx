@@ -97,6 +97,6 @@ elif [[ "$1" == quit ]] ; then
 	kill-session
 
 # no argument provided (start)
-else
+elif [[ "$1" == new ]] ; then
 	new-tab
 fi

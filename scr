@@ -5,7 +5,7 @@
 #
 # optional dependencies: `notify-send`, `upload`
 
-dir="$HOME/Pictures/Screenshots/$(date +'%y-%m-%d')"
+dir="$HOME/.cache/scr-$(date +'%y-%m-%d')"
 file="$(date +'%H-%M-%S')"
 image="$dir/$file.png"
 
@@ -19,7 +19,7 @@ screenshot() {
 
 up() {
 	if [[ "$upload" ]] ; then
-		upload "$image"
+		upload "$image" &&
 		if [[ "$notify" ]] ; then
 			notify-send "$(pbpaste) uploaded"
 		fi
@@ -43,8 +43,8 @@ flags() {
 
 if [ "$#" -ne 0 ]; then
 	flags "$@"
-	screenshot
-	upload
+	screenshot &&
+	up
 else
 	screenshot
 fi
