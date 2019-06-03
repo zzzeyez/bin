@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# load chunkwm's purify.so to eliminate shadows
+
+
+if [[ -f /tmp/purify ]] ; then
+	chunkc core::unload purify.so
+	notify-send 'purify unloaded'
+	rm /tmp/purify
+else
+	chunkc core::load purify.so
+	notify-send 'purify loaded'
+	touch /tmp/purify
+fi
+
+# why does this script give ubersicht a shadow?
+kill "$(pgrep bersicht)"
+open -a /Applications/Übersicht.app

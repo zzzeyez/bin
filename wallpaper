@@ -73,7 +73,7 @@ set_wallpaper() {
 notify() {
 	if [ -x "$notify" ] ; then
 		if [[ "$path" ]] ; then
-			notify-send -i "$path" -m "wallpaper set as $path"
+			notify-send -i "$path" -m "wallpaper set as ${path##*/}"
 		elif [[ "$color" ]] ; then
 			notify-send -i "$image" -m "wallpaper set as $color"
 		fi

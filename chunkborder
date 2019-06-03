@@ -4,5 +4,5 @@
 . "${HOME}/.cache/wal/colors.sh"
 
 # Set the border colors.
-chunkc border::color ff"${color1//#}"
+chunkc border::color ff"${color7//#}"
 

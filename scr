@@ -13,7 +13,7 @@ screenshot() {
 	mkdir -p "$dir"
 	screencapture -i "$image" &&
 	if [[ "$notify" ]] ; then
-		notify-send -m "✔ Screenshot $file.png saved" -i "$image"
+		notify-send -m "$file.png saved" -i "$image"
 	fi
 }
 

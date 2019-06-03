@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
-sassc --style expanded "${HOME}/scripts/pollen/scss/style.scss" > "${HOME}/scripts/pollen/style.css" &
-chunkborder
-bash "${HOME}/scripts/pecan/wal-set" &&
+# apply `wal` colors to additional programs
+
+# chunkwm borders
+chunkborder &
+
+# bars
+${HOME}/scripts/pecan/wal-set &>/dev/null &
+${HOME}/scripts/xanthia/wal-set &>/dev/null &
+
+# start page
+${HOME}/scripts/pollen/wal-set &>/dev/null
+
+# check if the background is dark and apply darkmode if so
 source "${HOME}/.cache/wal/colors.sh"
 bg="$(echo $color0 | tr -d '#' | head -c 1)"
 if [[ $bg =~ [a-zA-Z] ]]; then darkmode false; else darkmode true; fi
