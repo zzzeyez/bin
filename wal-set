@@ -9,9 +9,12 @@ ${HOME}/scripts/pecan/wal-set &>/dev/null &
 ${HOME}/scripts/xanthia/wal-set &>/dev/null &
 
 # start page
-${HOME}/scripts/pollen/wal-set &>/dev/null
+${HOME}/scripts/pollen/wal-set &>/dev/null &
+
+# macos highlights
+highlights
 
 # check if the background is dark and apply darkmode if so
 source "${HOME}/.cache/wal/colors.sh"
 bg="$(echo $color0 | tr -d '#' | head -c 1)"
-if [[ $bg =~ [a-zA-Z] ]]; then darkmode false; else darkmode true; fi
+if [[ $bg =~ [a-zA-Z] ]]; then darkmode false && sleep 0.5s && toggleshadow; else darkmode true && sleep 0.5s && toggleshadow; fi

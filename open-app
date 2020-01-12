@@ -13,7 +13,7 @@ finder() {
 			-- for floating
 			-- end tell
 			-- tell application "System Events" to tell process "Finder"
-			--	set position of window 1 to {100, 180}
+			-- 	set position of window 1 to {120, 300}
 			--	set size of front window to {410, 200}
 			-- end tell
 			-- tell application "Finder"

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# apply `wal` color as macos highlight color
+
+source "${HOME}/.cache/wal/colors.sh"
+
+r=${color1:1:2}
+g=${color1:3:2}
+b=${color1:5:2}
+
+# convert hex to regular number
+r=$(printf "%d" "0x$r")
+g=$(printf "%d" "0x$g")
+b=$(printf "%d" "0x$b")
+
+# divide by 255
+# and brighten because macos likes to darken
+r=$(echo "$r / 255 + 0.24" | bc -l)
+g=$(echo "$g / 255 + 0.24" | bc -l)
+b=$(echo "$b / 255 + 0.24" | bc -l)
+
+# apply highlight color
+defaults write NSGlobalDomain AppleHighlightColor -string "$r $g $b"

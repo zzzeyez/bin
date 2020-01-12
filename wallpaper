@@ -86,7 +86,6 @@ help() {
 	echo "wallpaper 8 "
 	echo "wallpaper ./smiledog.jpg "
 	echo "wallpaper ~/wallpapers/ "
-	echo "wallpaper dddddd  "
 	echo "-n to alert notify-send "
 	echo "-o to apply to current workspace only "
 	echo "-x to alleviate broken wallpaper "
