@@ -14,9 +14,9 @@ b=$(printf "%d" "0x$b")
 
 # divide by 255
 # and brighten because macos likes to darken
-r=$(echo "$r / 255 + 0.24" | bc -l)
-g=$(echo "$g / 255 + 0.24" | bc -l)
-b=$(echo "$b / 255 + 0.24" | bc -l)
+r=$(echo "$r / 255 + 0.25" | bc -l)
+g=$(echo "$g / 255 + 0.25" | bc -l)
+b=$(echo "$b / 255 + 0.25" | bc -l)
 
 # apply highlight color
 defaults write NSGlobalDomain AppleHighlightColor -string "$r $g $b"
