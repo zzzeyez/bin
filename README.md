@@ -26,6 +26,8 @@
 
 **lastfm** notifies and displays artwork for current track (requires `xanthia` and `jq`)
 
+**x-to-json** convert `xresources` colorschemes for use with `pywal`
+
 ## Linux
 
 **aur** notify if Arch updates are available

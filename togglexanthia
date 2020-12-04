@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [[ -d "${HOME}/library/Application Support/Übersicht/widgets/xanthia" ]] ; then
+	rm "${HOME}/library/Application Support/Übersicht/widgets/xanthia"
+else
+	ln -s "${HOME}/scripts/xanthia" "${HOME}/library/Application Support/Übersicht/widgets/xanthia"
+fi
+
+kill "$(ps cax | grep bersicht | awk '{print $1}')"
+open /Applications/Übersicht.app

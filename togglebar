@@ -9,15 +9,17 @@ ps cax | grep bersicht > /dev/null
 if [ $? -eq 0 ]; then
 	ubersicht_pid=$(ps cax | grep bersicht | awk '{print $1}')
 	kill $ubersicht_pid &
-	chunkc set custom_bar_enabled 0
-	chunkc core::unload tiling.so
-	chunkc core::load tiling.so
+  kill $(ps -ax | grep lastfm | awk '{print $1;}')
+#	chunkc set custom_bar_enabled 0
+#	chunkc core::unload tiling.so
+#	chunkc core::load tiling.so
 else
 	open /Applications/Übersicht.app
 	if [[ -e "${HOME}/Library/Application Support/Übersicht/widgets/pecan" ]] ; then
 	height="$(awk '/--pecan-chunkwm-bar:/{print $NF}' /Users/zzzeyez/Library/Application\ Support/Übersicht/widgets/pecan/style.css | tr -d ';')"
 	gaps="$(awk '/--pecan-chunkwm-gaps:/{print $NF}' /Users/zzzeyez/Library/Application\ Support/Übersicht/widgets/pecan/style.css | tr -d ';')"
-	chunkc set custom_bar_offset_top "$height"
+  lastfm -nq & disown
+#	chunkc set custom_bar_offset_top "$height"
 	#chunkc set global_desktop_offset_gap "$gaps"
 	#chunkc set global_desktop_offset_top "$gaps"
 	#chunkc set global_desktop_offset_bottom "$gaps"
@@ -27,9 +29,9 @@ else
 	#chunkc set 1_desktop_offset_bottom "$gaps"
 	#chunkc set 1_desktop_offset_left "$gaps"
 	#chunkc set 1_desktop_offset_right "$gaps"
-	chunkc set custom_bar_enabled 1
-	chunkc core::unload tiling.so
-	chunkc core::load tiling.so
+#	chunkc set custom_bar_enabled 1
+#	chunkc core::unload tiling.so
+#	chunkc core::load tiling.so
 	fi
 fi
 

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+# check for input
+t="$(basename $1)"
+
+
+[[ -z "$2" ]] && json="${HOME}/.config/wal/colorschemes/colorlovers" || json="$2"
+
+# convert to bash variables
+bg="$(cat $1 | grep background | awk '{print $NF}' | cut -c 2-)"
+fg="$(cat $1 | grep foreground | awk '{print $NF}' | cut -c 2-)"
+cursor="$(cat $1 | grep cursor | awk '{print $NF}' | cut -c 2-)"
+color0="$(cat $1 | grep color0 | awk '{print $NF}' | cut -c 2-)"
+color1="$(cat $1 | grep color1 | head -1 | awk '{print $NF}' | cut -c 2-)"
+color2="$(cat $1 | grep color2 | awk '{print $NF}' | cut -c 2-)"
+color3="$(cat $1 | grep color3 | awk '{print $NF}' | cut -c 2-)"
+color4="$(cat $1 | grep color4 | awk '{print $NF}' | cut -c 2-)"
+color5="$(cat $1 | grep color5 | awk '{print $NF}' | cut -c 2-)"
+color6="$(cat $1 | grep color6 | awk '{print $NF}' | cut -c 2-)"
+color7="$(cat $1 | grep color7 | awk '{print $NF}' | cut -c 2-)"
+color8="$(cat $1 | grep color8 | awk '{print $NF}' | cut -c 2-)"
+
+echo "$t"
+
+echo \
+'{
+  "wallpaper": "None",
+  "alpha": "100",
+  "special": { 
+    "background": "#'"$bg"'", 
+    "foreground": "#'"$fg"'", 
+    "cursor": "#'"$fg"'" 
+  }, 
+  "colors": { 
+    "color0": "#'"$color0"'", 
+    "color1": "#'"$color1"'", 
+    "color2": "#'"$color2"'", 
+    "color3": "#'"$color3"'", 
+    "color4": "#'"$color4"'", 
+    "color5": "#'"$color5"'", 
+    "color6": "#'"$color6"'", 
+    "color7": "#'"$color7"'", 
+    "color8": "#'"$color8"'",
+    "color9": "#'"$color1"'", 
+    "color10": "#'"$color2"'", 
+    "color11": "#'"$color3"'", 
+    "color12": "#'"$color4"'", 
+    "color13": "#'"$color5"'", 
+    "color14": "#'"$color6"'", 
+    "color15": "#'"$color7"'" 
+  }
+} ' > "$json/$t.json" && echo "$json/$t.json created"
+
