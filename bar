@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if pgrep waybar; then pkill waybar; fi
+sleep 1
+if pgrep Hyprland; then
+	waybar -c /home/zzyzx/.config/waybar/confighypr.json -s /home/zzyzx/.config/waybar/style.css
+else
+	waybar -c /home/zzyzx/.config/waybar/config.json -s /home/zzyzx/.config/waybar/style.css
+fi

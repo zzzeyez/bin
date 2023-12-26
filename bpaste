@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#use pywal colors on bemenu
+#clipboard instance
+source "${HOME}/.cache/wal/colors.sh"
+
+cliphist list | cut -f 2- | \
+	bemenu \
+	--prompt "paste:" \
+	-i \
+	-W 1 \
+	-l 0 \
+	-H 36px \
+	--fn "Iosevka Term 20" \
+	--ab "$background" \
+	--cb "$background" \
+	--tb "$background" \
+	--fb "$background" \
+	--nb "$background" \
+	--hb "$color1" \
+	--sb "$background" \
+	--scb "$background" \
+	--af "$color8" \
+	--cf "$background" \
+	--tf "$foreground" \
+	--ff "$foreground" \
+	--nf "$color8" \
+	--hf "$background" \
+	--sf "$foreground" \
+	--scf "$foreground" \
+	| wl-copy && wtype -M ctrl -P v -m ctrl

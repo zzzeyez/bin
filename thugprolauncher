@@ -2,4 +2,4 @@
 
 export WINEPREFIX=~/.wine WINEARCH=win32
 cd "/home/zzyzx/.wine/drive_c/users/zzyzx/AppData/Local/THUG Pro"
-/usr/bin/prime-run /usr/bin/wine ./THUGPro.exe
+/usr/bin/wine ./THUGProLauncher.exe

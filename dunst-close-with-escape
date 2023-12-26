@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#this is freezing me
+#
+is_notification=$(dunstctl count | grep -oiP '(?<=Currently displayed: )[[:digit:]]+')
+if [ "$is_notification" -gt "0" ]; then
+    dunstctl close
+else
+    ydotool key 9:1 9:0
+fi
+

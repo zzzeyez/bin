@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# apply `wal` colors to additional programs
+
+if pgrep nwg-dock; then pkill nwg-dock; fi
+nwg-dock-hyprland -mb 6 -i 28 -l top -s ../../.cache/wal/nwg-dock.css -nolauncher &
+pywal-discord & pywalfox update

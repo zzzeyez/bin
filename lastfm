@@ -52,7 +52,9 @@ notify() {
 		exit
 	elif [[ "$notify" ]] ; then
 		if [[ -f "$art" ]] ; then
-			notify-send -m "♫ $current$verbose" -i "$art"
+			#linux
+			notify-send "♫ $current$verbose" -i "$art"
+			#notify-send -m "♫ $current$verbose" -i "$art"
 		else
 			notify-send -m "♫ $current$verbose"
 		fi

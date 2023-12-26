@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+SWAY_CONFIG_HOME="${XDG_CONFIG_HOME:$HOME/.config}/sway"
+
+export LIBVA_DRIVER_NAME=nvidia
+#export XDG_SESSION_TYPE=wayland
+export GBM_BACKEND=nvidia-drm
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+
+ #sway-specific environment
+#if [[ -f $SWAY_CONFIG_HOME/env ]]; then
+	#set -a
+	 #shellcheck disable=SC1090
+	#. "$SWAY_CONFIG_HOME/env"
+	#set +a
+#fi
+
+# sesh xdg specification
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=sway
+export XDG_CURRENT_DESKTOP=sway
+export DESKTOP_SESSION=sway
+
+#qt
+export QT_WAYLAND_DISABLE_WINDOWDECORATIONS=1
+export QT_QPA_PLATFORM=wayland-egl
+
+export MOZ_ENABLE_WAYLAND=1
+export CLUTTER_BACKEND=wayland
+export SDL_VIDEODRIVER=wayland
+export WLR_DRM_DEVICES=/dev/dri/card0
+
+# nvidia
+export WLR_RENDERER=vulkan
+export WLR_NO_HARDWARE_CURSORS=1
+export XWAYLAND_NO_GLAMOR=1
+export WLR_EGL_NO_MODIFIERS=1
+
+#export LIBSEAT_BACKEND=logind
+
+#exec systemd-cat --indentifier sway dbus-run-session -- /usr/bin/sway "$@"
+exec /usr/bin/sway "$@"

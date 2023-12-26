@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+#sets random wallpaper
+ 
+files=(${HOME}/pictures/wallpapers/*)
+ 
+if [ $# -eq 0 ]
+	then
+		randomfile=$(printf "%s\n" "${files[RANDOM % ${#files[@]}]}")
+	else
+		randomfile="$1"
+fi
+
+if pgrep swaybg; then pkill swaybg; fi
+swaybg -i $randomfile -m fill
+notify-send "wallpaper: ${randomfile##*/}"

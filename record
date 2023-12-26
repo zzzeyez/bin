@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if pgrep wf-recorder; then 
+	pkill wf-recorder && notify-send "recording finished";
+else
+	if [ -z $@ ] ; then
+		wf-recorder --audio --file=/home/zzyzx/video/screengrab/$(date +'scr-%Y-%m-%d-%H-%M-%S.mp4') &
+		notify-send "recording"
+	else
+		wf-recorder -g "$(slurp)" --audio --file=/home/zzyzx/video/screengrab/$(date +'scr-%Y-%m-%d-%H-%M-%S.mp4')
+	fi
+fi
